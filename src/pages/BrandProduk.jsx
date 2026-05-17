@@ -94,10 +94,10 @@ function BrandProduk() {
   };
 
   return (
-    <div className="Dashboard-container" style={{ paddingBottom: selectedProduct ? '120px' : '40px', justifyContent: 'flex-start' }}>
+    <div className="Dashboard-container" style={{ paddingBottom: selectedProduct ? '150px' : '40px', justifyContent: 'flex-start', maxWidth: '100%', overflowX: 'hidden', boxSizing: 'border-box' }}>
       
       {/* Header Container */}
-      <div style={{width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '40px'}}>
+      <div style={{width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: 'clamp(20px, 4vw, 40px)', paddingLeft: 'clamp(15px, 4vw, 30px)', paddingRight: 'clamp(15px, 4vw, 30px)', boxSizing: 'border-box'}}>
         <Link 
           to="/dashboard" 
           style={{
@@ -117,7 +117,7 @@ function BrandProduk() {
         <h1 style={{color: 'white', textAlign: 'left', margin: '0 0 30px 0'}}>Top Up: {decodedBrand}</h1>
         
         {/* STEP 1: ID Input */}
-        <div style={{ width: '100%', background: '#1e293b', borderRadius: '15px', padding: '25px', marginBottom: '30px', border: '1px solid #334155' }}>
+        <div style={{ width: '100%', background: '#1e293b', borderRadius: '15px', padding: 'clamp(15px, 4vw, 25px)', marginBottom: '30px', border: '1px solid #334155', boxSizing: 'border-box' }}>
           <h2 style={{ color: 'white', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 0, fontSize: '1.4rem' }}>
             <span style={{ background: '#3b82f6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>1</span>
             Masukkan Data Akun
@@ -128,21 +128,21 @@ function BrandProduk() {
                placeholder="Masukkan Nomor Tujuan / Game ID"
                value={userId1}
                onChange={(e) => setUserId1(e.target.value)}
-               style={{ flex: '2', minWidth: '250px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem' }}
+               style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
              />
              <input 
                type="text" 
                placeholder="Server / Zone ID (Bila Ada)"
                value={userId2}
                onChange={(e) => setUserId2(e.target.value)}
-               style={{ flex: '1', minWidth: '200px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem' }}
+               style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
              />
           </div>
           <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '15px' }}>Pastikan data User ID sudah sesuai agar pesanan segera masuk tanpa kendala. Segala bentuk kesalahan input menjadi tanggungjawab pembeli.</p>
         </div>
 
         {/* STEP 2: Product List */}
-        <div style={{ width: '100%', background: '#1e293b', borderRadius: '15px', padding: '25px', marginBottom: '30px', border: '1px solid #334155' }}>
+        <div style={{ width: '100%', background: '#1e293b', borderRadius: '15px', padding: 'clamp(15px, 4vw, 25px)', marginBottom: '30px', border: '1px solid #334155', boxSizing: 'border-box' }}>
           <h2 style={{ color: 'white', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 0, fontSize: '1.4rem', marginBottom: '25px' }}>
             <span style={{ background: '#3b82f6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>2</span>
             Pilih Nominal & Produk
@@ -167,11 +167,11 @@ function BrandProduk() {
       {/* FLOAT FOOTER (STEP 3) */}
       {selectedProduct && (
         <div style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0, padding: '25px 50px',
+          position: 'fixed', bottom: 0, left: 0, right: 0, padding: 'clamp(15px, 4vw, 25px) clamp(20px, 5vw, 50px)',
           background: 'rgba(15, 23, 42, 0.95)', borderTop: '1px solid #334155',
           backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'space-between',
           alignItems: 'center', zIndex: 100, boxShadow: '0 -5px 20px rgba(0,0,0,0.5)',
-          flexWrap: 'wrap', gap: '20px'
+          flexWrap: 'wrap', gap: '15px', boxSizing: 'border-box', width: '100%'
         }}>
           <div>
             <p style={{ color: '#94a3b8', margin: '0 0 5px', fontSize: '14px' }}>Total Harga Pembayaran</p>

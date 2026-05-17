@@ -324,7 +324,7 @@
     
     .nav-button {
         position: fixed;
-        left: -100%;
+        left: -120%;
         bottom: 0;
         flex-direction: column;
         background: rgba(15, 23, 42, 0.98);
