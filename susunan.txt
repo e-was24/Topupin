@@ -1,0 +1,57 @@
+src/
+├── assets/ # Gambar (logo, icon game, banner)
+├── components/ # Komponen kecil yang dipakai berulang (Button, Input, Card)
+├── layouts/ # Bungkus utama (Navbar, Footer) agar tidak reload tiap ganti page
+├── pages/ # Halaman utama (Home, Order, TransactionStatus)
+├── services/ # Logika API (ke Payment Gateway atau Supplier Top-up)
+├── hooks/ # Logika custom (misal: Timer countdown bayar)
+├── App.jsx # Root component & Routing
+└── main.jsx # Entry poin
+
+src/
+├── components/
+│ ├── Button.jsx
+│ ├── Input.jsx
+│ ├── Navbar.jsx
+│ └── Footer.jsx
+├── pages/
+│ ├── Home.jsx
+│ ├── Order.jsx
+│ └── TransactionStatus.jsx
+├── services/
+│ └── api.js
+├── App.jsx
+└── main.jsx
+
+components
+
+button
+
+<Button text="Buy" className="btn btn-buy" disabled />
+<Button text="Buy" className="btn btn-buy" />
+<Button text="Add to Cart" className="btn btn-addToCart" disabled />
+<Button text="Add to Cart" className="btn btn-addToCart" />
+
+navbar
+
+const menus = [
+{ text: "Beranda", link: "/" },
+{ text: "Cek ID", link: "/cek-id" },
+{ text: "Status Transaksi", link: "/status-transaksi" },
+];
+
+return (
+<>
+<Navbar
+        menus={menus}
+        NavigationName="navbar"
+        navContainer="nav-container"
+        navLogo="nav-logo"
+        navMenu="nav-menu"
+        navMenuItem="nav-menu-item"
+        navMenuList="nav-menu-list"
+        navButton="nav-button"
+        logo={LogoImg}
+      />
+</>
+);

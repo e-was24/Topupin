@@ -1,0 +1,293 @@
+/* Custom Variables untuk tema gelap */
+:root {
+    --primary-color: #818cf8; /* Indigo yang lebih terang untuk kontras dark mode */
+    --primary-hover: #6366f1;
+    --bg-dark: #0f172a;        /* Latar belakang utama (Midnight Blue) */
+    --card-bg: #1e293b;        /* Latar belakang kartu (Slate) */
+    --text-main: #f1f5f9;      /* Teks putih abu-abu terang */
+    --text-muted: #94a3b8;     /* Teks keterangan/label */
+    --input-bg: #0f172a;       /* Latar belakang input lebih gelap dari kartu */
+    --border-color: #334155;   /* Border tipis yang tidak mencolok */
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+}
+
+/* Login & Register Containers */
+.login-container, 
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 15px;
+}
+
+/* Wrapper / Card */
+.login-wrapper, 
+.register-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 40px;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid var(--border-color); /* Tambahan border agar kartu terpisah dari bg */
+    transition: transform 0.3s ease;
+}
+
+.login-wrapper:hover, 
+.register-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+/* Header */
+.login-header, 
+.register-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.login-header h2, 
+.register-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+/* Body */
+.login-body, 
+.register-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Form Groups */
+.login-form-group, 
+.register-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-form-group label, 
+.register-form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+
+/* Input Fields */
+.login-form-group input, 
+.register-form-group input {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-color);
+    font-size: 15px;
+    background-color: var(--input-bg);
+    color: var(--text-main); /* Pastikan teks input berwarna terang */
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Efek Focus saat input diklik */
+.login-form-group input:focus, 
+.register-form-group input:focus {
+    border-color: var(--primary-color);
+    background-color: var(--input-bg);
+    box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.2);
+}
+
+/* Tambahan: Styling untuk tombol */
+button {
+    background-color: var(--primary-color);
+    color: #0f172a; /* Teks gelap di atas tombol terang agar kontras */
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+    color: white;
+}
+
+/* Not Found */
+.notfound-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* Latar belakang gelap yang lembut */
+  background-color: #0f172a; 
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.notfound-content {
+  max-width: 500px;
+  width: 100%;
+}
+
+.svg-wrapper {
+  margin-bottom: 20px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.notfound-text {
+  font-size: 120px;
+  font-weight: 900;
+  /* Warna ungu tetap cerah agar kontras */
+  fill: #818cf8; 
+}
+
+h1 {
+  font-size: 2rem;
+  /* Teks judul menjadi putih/abu terang */
+  color: #f1f5f9; 
+  margin-bottom: 1rem;
+}
+
+p {
+  /* Teks deskripsi menjadi abu-abu pudar */
+  color: #94a3b8; 
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.home-button {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #6C63FF;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  /* Shadow sedikit lebih gelap dan menyatu */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.home-button:hover {
+  background-color: #818cf8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 99, 255, 0.2);
+}
+
+/* Animasi Mengapung */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Dashboard */
+.Dashboard-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100dvh;
+  /* Latar belakang gelap yang lembut */
+  background-color: #0f172a; 
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.tes-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  background: radial-gradient(circle, #1a2b55, #161f2e);
+  padding: 20px 10px;
+  margin: 10px;
+  border-radius: 20px;
+  width: 100dvw;
+  min-height: 100dvh;
+  max-height: fit-content;
+}
+
+/* ==========================================================================
+   5. FLOATING MENU ANIMATION (Efek Breathing Glow & Slide Keluar)
+   ========================================================================== */
+.tes-area {
+  position: relative;
+}
+
+.menu-btn-real {
+  position: fixed;
+  font-family: 'Poppins', sans-serif;
+  top: 25dvh;
+  left: 0;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 0 30px 30px 0;
+  padding: 10px 20px 10px 15px; /* Tambah padding kanan agar estetik */
+  background: white;
+  color: black;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  z-index: 999; /* Memastikan menu berada di paling depan layar */
+  cursor: pointer;
+
+  /* State Awal: Sedikit bersembunyi ke kiri & transisi kenyal */
+  transform: translateX(-8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  
+  /* Menjalankan animasi denyut cahaya konstan saat diam */
+  animation: floatBreath 3s ease-in-out infinite;
+}
+
+/* Efek Ketika Area Menu Didekati/Disentuh Kursor (Hover) */
+.menu-btn-real:hover, .menu-btn-real.active {
+  transform: translateX(0); /* Maju penuh */
+  padding-right: 28px;      /* Melebar secara dinamis ke kanan */
+  background: #0ae448;      /* Berubah warna jadi hijau neon GSAP saat aktif */
+  color: black;           /* Teks berubah gelap agar kontras */
+  box-shadow: 0 0 25px rgba(10, 228, 72, 0.45); /* Pendaran neon yang kuat */
+}
+
+/* Keyframes untuk Efek Denyut Halus (Breathing) saat Diam */
+@keyframes floatBreath {
+  0% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    /* Membuat efek pendaran putih tipis di sekitar tombol menu */
+    box-shadow: 0 4px 25px rgba(255, 255, 255, 0.25), 0 0 10px rgba(255, 255, 255, 0.15);
+    transform: translateX(-4px); /* Bergerak maju-mundur tipis */
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* card end */
