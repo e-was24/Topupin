@@ -70,10 +70,56 @@ function App() {
       />
       <Popup isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div style={{ textAlign: "center", padding: "10px" }}>
-          <p style={{ marginBottom: "25px" }}>
-            Anda dapat memasukkan teks, form, atau komponen React lainnya di
-            sini.
-          </p>
+          <h3 style={{ marginBottom: "20px" }}>Hubungi Kami</h3>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <a
+              href="https://wa.me/6281227347103"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#25D366",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              WhatsApp
+            </a>
+            <a
+              href="https://t.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#2FA6D9",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Telegram
+            </a>
+            <a
+              href="https://discord.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#5865F2",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Discord
+            </a>
+          </div>
         </div>
       </Popup>
       <Version />
