@@ -342,6 +342,19 @@
     .nav-button .input-search {
         width: 100% !important;
     }
+
+    .navbar-searchbar {
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 50% !important;
+        margin: 0 !important;
+    }
+}
+@media (max-width: 500px) {
+    .navbar-searchbar {
+        width: 45% !important;
+    }
 }
 /* Navigation Bar end */
 
@@ -497,7 +510,7 @@
   
   /* PENTING: Memaksa tinggi card mengikuti baris tertinggi di grid-nya */
   height: 100%; 
-  width: 300px;
+  width: 100%;
   box-sizing: border-box;
   
   color: var(--text-main);
