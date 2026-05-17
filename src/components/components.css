@@ -510,7 +510,7 @@
   
   /* PENTING: Memaksa tinggi card mengikuti baris tertinggi di grid-nya */
   height: 100%; 
-  width: 100%;
+  width: 300px;
   box-sizing: border-box;
   
   color: var(--text-main);
@@ -518,6 +518,30 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Memperbaiki orientasi kotak (Square) Card di Layar HP */
+@media (max-width: 600px) {
+  .card {
+    width: 100%;
+    padding: 10px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+  
+  /* Sembunyikan tombol detail di HP agar kartu tetap berbentuk kotak */
+  .card .card-footer {
+    display: none !important;
+  }
+
+  /* Kecilkan judul dan gambar khusus HP */
+  .card-title {
+    font-size: 0.9rem !important;
+  }
+  
+  .card-img img {
+    height: 80px !important;
+  }
 }
 
 /* Efek Hover Card (Mengangkat & Memancarkan Cahaya Neon) */
