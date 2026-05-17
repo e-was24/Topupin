@@ -147,7 +147,7 @@ function BrandProduk() {
             <span style={{ background: '#3b82f6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px' }}>2</span>
             Pilih Nominal & Produk
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '22px', width: '100%' }}>
+          <div className="catalog-grid">
             {filteredProd.map((product) => (
               <ProductCard
                 key={product.buyer_sku_code}

@@ -269,15 +269,7 @@ function Dashboard() {
               : {category}
             </h2>
 
-            <div
-              className="tes-area"
-              style={{
-                background: "transparent",
-                padding: "0",
-                boxShadow: "none",
-                justifyContent: "flex-start",
-              }}
-            >
+            <div className="dashboard-catalog-grid">
               {brands.map((brandInfo, index) => (
                 <Card
                   key={brandInfo.brand}
