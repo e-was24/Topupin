@@ -1,15 +1,16 @@
 import "./components.css";
 import Button from "./Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Komponen Card Kamu
 function Card(props) {
+  const navigate = useNavigate();
   // Jika punya 3 variasi warna, gunakan % 3
   const themeClass = `theme-${props.index % 3}`;
 
   return (
     // Gabungkan kelas dasar dengan kelas tema dinamis
-    <div className={`card ${themeClass}`}>
+    <div className={`card ${themeClass}`} onClick={() => navigate(props.link)} style={{ cursor: 'pointer' }}>
       <div className="card-header">
         <h2 className="card-title">{props.title}</h2>
       </div>
