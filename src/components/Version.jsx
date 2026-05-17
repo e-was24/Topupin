@@ -1,5 +1,4 @@
 import React from "react";
-import "./Version.css"; // Jika ingin memisahkan CSS-nya
 
 function Version() {
   // Kamu bisa mengubah nomor versi dan tanggal di sini secara berkala
