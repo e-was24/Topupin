@@ -9,6 +9,7 @@ function Navbar(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Steam-style Realtime Search Pipeline
@@ -48,10 +49,14 @@ function Navbar(props) {
   useEffect(() => {
     // Cek session awal saat dimuat
     const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setUser(session?.user || null);
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setUser(session?.user || null);
+      } catch (err) {
+        console.warn("Supabase auth checks suspended due to missing VERCEL config.");
+      }
     };
     fetchSession();
 
@@ -73,26 +78,30 @@ function Navbar(props) {
   return (
     <>
       <nav className={props.NavigationName}>
-        <div className={props.navContainer}>
+        <div className={props.navContainer} style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
           <div className={props.navLogo}>
             <Link to="/">
               <img src={props.logo} alt="" />
             </Link>
           </div>
-          <div className={props.navMenu}>
+          
+          <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+             <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>
+                {isMobileMenuOpen ? 'close' : 'menu'}
+             </span>
+          </div>
+
+          <div className={`${props.navMenu} ${isMobileMenuOpen ? 'active' : ''}`}>
             <ul className={props.navMenuList}>
               {props.menus.map((item, index) => (
-                <li key={index} className={props.navMenuItem}>
+                <li key={index} className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
                   <Link to={item.link}>{item.text}</Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-        <div
-          className={props.navButton}
-          style={{ gap: "15px", alignItems: "center" }}
-        >
+        <div className={`${props.navButton} ${isMobileMenuOpen ? 'active' : ''}`} style={{ gap: "15px", alignItems: "center" }}>
           {/* Real-time Search Block */}
           <div
             style={{
