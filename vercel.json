@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/src/server.js"
+      "destination": "/api/server.js"
     },
     {
       "source": "/webhook/(.*)",
-      "destination": "/src/server.js"
+      "destination": "/api/server.js"
     },
     {
       "source": "/(.*)",
