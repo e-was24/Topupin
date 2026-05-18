@@ -21,7 +21,6 @@ function Payment() {
   const handleCheckout = async () => {
     if (!paymentMethod) return alert("Pilih metode pembayaran!");
 
-    // Pemetaan nama di UI ke kode API Pakasir
     const methodMapping = {
       "QRIS (All E-Wallet)": "qris",
       Gopay: "gopay",
@@ -32,8 +31,9 @@ function Payment() {
 
     setLoading(true);
     try {
-      // GANTI URL ini ke URL server backend kamu (contoh: localhost:5000)
-      const response = await fetch("http://localhost:5000/api/create-payment", {
+      // PERBAIKAN: Gunakan path relatif "/api/pembayaran"
+      // agar otomatis memanggil domain Vercel yang sama
+      const response = await fetch("/api/pembayaran", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -45,21 +45,25 @@ function Payment() {
         }),
       });
 
+      // Tambahkan pengecekan jika respon bukan JSON (misal kena 404 dari server)
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success && result.checkout_url) {
-        // Redirect user ke halaman pembayaran Pakasir
         window.location.href = result.checkout_url;
       } else {
         alert("Gagal: " + (result.message || "Terjadi kesalahan server"));
       }
     } catch (err) {
-      alert("Gagal terhubung ke server. Pastikan backend sudah jalan!");
+      console.error("Payment Error:", err);
+      alert("Gagal terhubung ke server. Pastikan API di Vercel sudah aktif!");
     } finally {
       setLoading(false);
     }
   };
-
   const methods = [
     "QRIS (All E-Wallet)",
     "Gopay",
