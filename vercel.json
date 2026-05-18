@@ -1,5 +1,14 @@
 {
+  "version": 2,
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/src/server.js"
+    },
+    {
+      "source": "/webhook/(.*)",
+      "destination": "/src/server.js"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

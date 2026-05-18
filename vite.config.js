@@ -41,7 +41,9 @@ export default defineConfig({
     // Opsional: memaksa port tetap di 5173 agar tidak pindah-pindah
     strictPort: true,
     proxy: {
-      '/api/digiflazz': {
+      "/api/pembayaran": "http://localhost:5000",
+      "/webhook/pakkasir": "http://localhost:5173", // Actually webhook should probably be hit directly or proxied
+      "/api/digiflazz": {
         target: 'https://api.digiflazz.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/digiflazz/, '')
