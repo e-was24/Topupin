@@ -186,19 +186,22 @@ function Dashboard() {
         style={{
           position: "fixed",
           right: "20px",
-          top: "50dvh",
+          top: "53dvh", // Diubah ke 50% dvh agar pas di tengah vertikal bersama translateY(-50%)
           transform: `translateY(-50%) ${showAlphabet ? "translateX(0)" : "translateX(150%)"}`,
           display: "flex",
           flexDirection: "column",
+          justifyContent: "space-between", // Mendorong huruf membagi rata ruang yang tersedia
+          alignItems: "center", // Memastikan huruf pas di tengah secara horizontal
           background: "rgba(15, 23, 42, 0.9)",
           backdropFilter: "blur(10px)",
-          padding: "15px 8px",
+          padding: "3px 8px", // Menambah padding atas-bawah sedikit agar huruf pertama & terakhir tidak mepet border
           borderRadius: "30px",
           zIndex: 100,
           border: "1px solid rgba(255,255,255,0.1)",
           transition: "all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
           opacity: showAlphabet ? 1 : 0,
           height: "70dvh",
+          overflowY: "auto", // Pengaman: Jika layar terlalu kerdil, konten akan ter-scroll di DALAM border, tidak meluber keluar
         }}
       >
         <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
@@ -217,13 +220,15 @@ function Dashboard() {
               }}
               style={{
                 color: isValid ? "#3b82f6" : "#475569",
-                fontSize: "0.85rem",
+                fontSize: "0.7em",
                 fontWeight: "bold",
-                cursor: isValid ? "pointer" : "default",
-                padding: "0 5px",
+                cursor: isValid ? "pointer" : "not-allowed",
+                padding: "2px 0", // Memberi sedikit jarak antar huruf secara vertikal
                 textAlign: "center",
                 transition: "0.2s",
                 transform: isValid ? "scale(1.1)" : "scale(1)",
+                flexShrink: 1, // Memaksa setiap elemen huruf mengecil jika ruangannya sempit
+                width: "100%", // Memastikan text-align center bekerja sempurna
               }}
             >
               {letter}
@@ -283,18 +288,13 @@ function Dashboard() {
                   className="material-symbols-outlined"
                   style={{ color: "#3b82f6" }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#255290"><path d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#255290"><path d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z" /></svg>
                 </span>
                 {category}
               </h2>
 
               <div
                 className="dashboard-catalog-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                  gap: "20px",
-                }}
               >
                 {brands.map((brandInfo, index) => (
                   <Card
