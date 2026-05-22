@@ -300,7 +300,7 @@ function Dashboard() {
                   <Card
                     key={brandInfo.brand}
                     title={brandInfo.brand}
-                    text={`${brandInfo.count} Piliha`}
+                    text={`${brandInfo.count} Pilihan`}
                     buttonText="Beli"
                     img={brandInfo.img || "https://picsum.photos/150"}
                     link={`/dashboard/brand/${encodeURIComponent(brandInfo.brand)}`}
