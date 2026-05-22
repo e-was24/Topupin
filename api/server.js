@@ -1,8 +1,11 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-// Jika server.js ingin mengambil data dari src/data/
-const products = require("../src/data/digiflazzProduct.json");
+import { createRequire } from "module";
+
+// Solusi aman membaca JSON di lingkungan ES Modules Node.js
+const require = createRequire(import.meta.url);
+const products = require("./src/data/digiflazzProduct.json");
 
 const app = express();
 
@@ -10,10 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Konfigurasi Pakasir dari Environment Variables Vercel
+// Konfigurasi Pakasir dari Environment Variables Vercel / .env lokal
 const PAKASIR_PROJECT = process.env.PAKASIR_PROJECT_SLUG;
 const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 
+// Endpoint Pembuatan Tagihan (Invoice)
 app.post("/api/pembayaran", async (req, res) => {
   const { amount, email, game_id, method } = req.body;
 
@@ -21,7 +25,7 @@ app.post("/api/pembayaran", async (req, res) => {
   if (!amount || !method || !PAKASIR_API_KEY) {
     return res.status(400).json({
       success: false,
-      message: "Data tidak lengkap atau API Key belum disetting di Vercel",
+      message: "Data tidak lengkap atau API Key belum disetting di Environment Variables",
     });
   }
 
@@ -36,10 +40,8 @@ app.post("/api/pembayaran", async (req, res) => {
         project: PAKASIR_PROJECT,
         api_key: PAKASIR_API_KEY,
         order_id: `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        amount: amount,
-        // Gunakan URL dinamis atau hardcoded untuk redirect setelah bayar
-        redirect_url:
-          process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
+        amount: Number(amount), // Memastikan tipe data berupa angka murni
+        redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
       }),
     });
 
@@ -53,34 +55,25 @@ app.post("/api/pembayaran", async (req, res) => {
     } else {
       res.status(400).json({
         success: false,
-        message:
-          result.message || "Gagal mendapatkan URL pembayaran dari Pakasir",
+        message: result.message || "Gagal mendapatkan URL pembayaran dari Pakasir",
       });
     }
   } catch (err) {
     console.error("Error Create Invoice:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Terjadi kesalahan pada server" });
+    res.status(500).json({ success: false, message: "Terjadi kesalahan pada koneksi server" });
   }
 });
 
 /**
- * 2. ENDPOINT: WEBHOOK CALLBACK
- * URL Akses: https://domain-kamu.vercel.app/webhook/pakkasir
+ * Endpoint Webhook Callback Pakasir
  */
 app.post("/webhook/pakkasir", async (req, res) => {
   const data = req.body;
 
-  // Cek status dari body request Pakasir
   if (data && data.status === "completed") {
     console.log(`✅ PEMBAYARAN LUNAS: ${data.order_id}`);
-
     try {
-      // --- LOGIKA PENGIRIMAN DIAMOND DISINI ---
-      // Contoh: await kirimDiamondKeSupplier(data.order_id, data.amount);
-
-      // Kirim respon sukses ke Pakasir
+      // Tempat peletakan logika integrasi API suplier otomatis (API Digiflazz Anda)
       return res.status(200).send("OK");
     } catch (error) {
       console.error("Gagal memproses pengiriman produk:", error);
@@ -88,18 +81,17 @@ app.post("/webhook/pakkasir", async (req, res) => {
     }
   }
 
-  // Jika status bukan completed, tetap beri respon agar tidak di-retry terus menerus
   console.log(`⚠️ Status transaksi ${data.order_id}: ${data.status}`);
   res.status(200).send("Notification Received");
 });
 
-// Jalankan server lokal jika bukan di Vercel
+// Jalankan server lokal jika di lingkungan development
 if (process.env.NODE_ENV !== "production") {
   const PORT = 5000;
   app.listen(PORT, () =>
-    console.log(`🚀 Lokal server: http://localhost:${PORT}`),
+    console.log(`🚀 Lokal server backend aktif di: http://localhost:${PORT}`)
   );
 }
 
-// WAJIB UNTUK VERCEL
+// Ekspor default khusus kebutuhan deployment arsitektur Vercel Serverless
 export default app;

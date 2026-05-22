@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./components.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // <-- useLocation dihapus karena dipindahkan ke App.jsx/Suspense
 import { supabase } from "../lib/supabaseClient";
 import Button from "./Button";
 
@@ -11,6 +11,9 @@ function Navbar(props) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  // State khusus untuk menangani loading internal pemicu hamburger menu mobile
+  const [isMenuLoading, setIsMenuLoading] = useState(false);
 
   // Steam-style Realtime Search Pipeline
   useEffect(() => {
@@ -24,14 +27,12 @@ function Navbar(props) {
         const parsed = JSON.parse(cachedData);
         const term = searchTerm.toLowerCase();
 
-        // Match both exact product names and parent Brands
         const matched = parsed.filter(
           (p) =>
             (p.product_name && p.product_name.toLowerCase().includes(term)) ||
             (p.brand && p.brand.toLowerCase().includes(term)),
         );
 
-        // Group by Brand to avoid spamming 100 identical Diamond nominals
         const uniqueBrands = [];
         const seen = new Set();
         for (let p of matched) {
@@ -40,14 +41,12 @@ function Navbar(props) {
             uniqueBrands.push({ brand: p.brand, category: p.category });
           }
         }
-        // Take top 5 results for dropdown
         setSearchResults(uniqueBrands.slice(0, 5));
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [searchTerm]);
 
   useEffect(() => {
-    // Cek session awal saat dimuat
     const fetchSession = async () => {
       try {
         const {
@@ -60,7 +59,6 @@ function Navbar(props) {
     };
     fetchSession();
 
-    // Pastikan Navbar selalu memperbarui tombol jika status login berubah
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -72,7 +70,23 @@ function Navbar(props) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setIsMobileMenuOpen(false); // Tutup menu mobile saat logout
     navigate("/");
+  };
+
+  // Fungsi interaksi tombol hamburger dengan delay loading instan khusus mobile
+  const handleHamburgerClick = () => {
+    if (!isMobileMenuOpen) {
+      setIsMenuLoading(true);
+      
+      // Simulasi loading selama 400 milidetik sebelum menu benar-benar dibuka
+      setTimeout(() => {
+        setIsMobileMenuOpen(true);
+        setIsMenuLoading(false);
+      }, 400); 
+    } else {
+      setIsMobileMenuOpen(false);
+    }
   };
 
   return (
@@ -80,12 +94,12 @@ function Navbar(props) {
       <nav className={props.NavigationName}>
         <div className={props.navContainer} style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
           <div className={props.navLogo}>
-            <Link to="/">
-              <img src={props.logo} alt="" />
+            <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
+              <img src={props.logo} alt="Logo" />
             </Link>
           </div>
-          
-          {/* Real-time Search Block Moved into Main Container */}
+
+          {/* Real-time Search Block */}
           <div className="navbar-searchbar" style={{ position: "relative", display: "flex", alignItems: "center", flex: 1, justifyContent: "flex-end", margin: "0 15px" }}>
             <div style={{ display: "flex", alignItems: "center", background: "rgba(15, 23, 42, 0.6)", borderRadius: "30px", border: "1px solid #334155", padding: "4px 10px", width: "100%", maxWidth: "300px", transition: "all 0.3s" }}>
               <span className="material-symbols-outlined" style={{ color: "#94a3b8", fontSize: "20px", marginLeft: '8px' }}>
@@ -93,7 +107,16 @@ function Navbar(props) {
                   <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
                 </svg>
               </span>
-              <input type="text" placeholder="Cari Game / Produk..." className="input-search" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setShowDropdown(true); }} onFocus={() => setShowDropdown(true)} onBlur={() => setTimeout(() => setShowDropdown(false), 200)} style={{ background: "transparent", border: "none", color: "white", width: "100%", padding: "5px 8px", outline: "none", fontSize: '0.85rem' }} />
+              <input 
+                type="text" 
+                placeholder="Cari Game / Produk..." 
+                className="input-search" 
+                value={searchTerm} 
+                onChange={(e) => { setSearchTerm(e.target.value); setShowDropdown(true); }} 
+                onFocus={() => setShowDropdown(true)} 
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)} 
+                style={{ background: "transparent", border: "none", color: "white", width: "100%", padding: "5px 8px", outline: "none", fontSize: '0.85rem' }} 
+              />
             </div>
 
             {/* Dropdown Results Overlay */}
@@ -109,7 +132,7 @@ function Navbar(props) {
                 ) : (
                   <div style={{ padding: "15px", color: "#94a3b8", textAlign: "center", fontSize: "0.8rem" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "28px", display: "block", margin: "0 auto 8px", color: "#475569" }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#CCCCCC"><path d="M138.5-138.5Q80-197 80-280t58.5-141.5Q197-480 280-480t141.5 58.5Q480-363 480-280t-58.5 141.5Q363-80 280-80t-141.5-58.5ZM824-120 568-376q-12-13-25.5-26.5T516-428q38-24 61-64t23-88q0-75-52.5-127.5T420-760q-75 0-127.5 52.5T240-580q0 6 .5 11.5T242-557q-18 2-39.5 8T164-535q-2-11-3-22t-1-23q0-109 75.5-184.5T420-840q109 0 184.5 75.5T680-580q0 43-13.5 81.5T629-428l251 252-56 56Zm-615-61 71-71 70 71 29-28-71-71 71-71-28-28-71 71-71-71-28 28 71 71-71 71 28 28Z" /></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 24px" fill="#CCCCCC"><path d="M138.5-138.5Q80-197 80-280t58.5-141.5Q197-480 280-480t141.5 58.5Q480-363 480-280t-58.5 141.5Q363-80 280-80t-141.5-58.5ZM824-120 568-376q-12-13-25.5-26.5T516-428q38-24 61-64t23-88q0-75-52.5-127.5T420-760q-75 0-127.5 52.5T240-580q0 6 .5 11.5T242-557q-18 2-39.5 8T164-535q-2-11-3-22t-1-23q0-109 75.5-184.5T420-840q109 0 184.5 75.5T680-580q0 43-13.5 81.5T629-428l251 252-56 56Zm-615-61 71-71 70 71 29-28-71-71 71-71-28-28-71 71-71-71-28 28 71 71-71 71 28 28Z" /></svg>
                     </span>
                     Produk tidak ditemukan.
                   </div>
@@ -117,38 +140,63 @@ function Navbar(props) {
               </div>
             )}
           </div>
-          
-          <div className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-             {isMobileMenuOpen ? (
-               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                 <line x1="18" y1="6" x2="6" y2="18"></line>
-                 <line x1="6" y1="6" x2="18" y2="18"></line>
-               </svg>
-             ) : (
-               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                 <line x1="3" y1="12" x2="21" y2="12"></line>
-                 <line x1="3" y1="6" x2="21" y2="6"></line>
-                 <line x1="3" y1="18" x2="21" y2="18"></line>
-               </svg>
-             )}
+
+          {/* Hamburger Menu Mobile Toggle */}
+          <div className="hamburger" onClick={handleHamburgerClick}>
+            {isMenuLoading ? (
+              <div className="menu-spinner"></div>
+            ) : isMobileMenuOpen ? (
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
           </div>
 
           <div className={`${props.navMenu} ${isMobileMenuOpen ? 'active' : ''}`}>
             <ul className={props.navMenuList}>
-              {props.menus.map((item, index) => (
-                <li key={index} className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
-                  <Link to={item.link}>{item.text}</Link>
-                </li>
-              ))}
+              {user ? (
+                <>
+                  <li className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </li>
+                  <li className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link to="/cek-id">Cek Id</Link>
+                  </li>
+                  <li className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link to="/produk">List Produk</Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {props.menus.map((item, index) => (
+                    <li
+                      key={`menu-${index}`}
+                      className={props.navMenuItem}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Link to={item.link}>{item.text}</Link>
+                    </li>
+                  ))}
+                </>
+              )}
             </ul>
           </div>
         </div>
+
+        {/* Tombol Auth (Login / Register / Logout) */}
         <div className={`${props.navButton} ${isMobileMenuOpen ? 'active' : ''}`} style={{ gap: "15px", alignItems: "center" }}>
-          {/* Render tombol secara bersyarat berdasarkan state user */}
           {user ? (
             <Button
-              text="Keluar Akun"
-              className="btn btn-register"
+              text="Keluar"
+              className="btn btn-logout"
+              style={{ color: "#ef4444", borderColor: "#ef4444" }}
               onClick={handleLogout}
             />
           ) : (
@@ -157,8 +205,14 @@ function Navbar(props) {
                 text="Register"
                 className="btn btn-register"
                 to="/register"
+                onClick={() => setIsMobileMenuOpen(false)}
               />
-              <Button text="Login" className="btn btn-login" to="/login" />
+              <Button 
+                text="Login" 
+                className="btn btn-login" 
+                to="/login" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
             </>
           )}
         </div>

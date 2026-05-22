@@ -8,7 +8,7 @@ import { fetchProducts } from "../api/productApi";
 function BrandProduk() {
   const { brandName } = useParams();
   const decodedBrand = decodeURIComponent(brandName);
-  
+
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [dataProduk, setDataProduk] = useState([]);
@@ -56,7 +56,7 @@ function BrandProduk() {
         const validData = Array.isArray(data) ? data : [];
         setDataProduk(validData);
         setError(null);
-        
+
         localStorage.setItem("lastPricelist", JSON.stringify(validData));
         localStorage.setItem("lastUpdateTime", new Date().getTime().toString());
       } catch (err) {
@@ -82,30 +82,30 @@ function BrandProduk() {
 
   const handlePayment = () => {
     if (!userId1 || !selectedProduct) return; // Basic validation
-    
+
     // Jump to Payment page with specific payload
-    navigate('/payment', { 
-      state: { 
-        product: selectedProduct, 
-        gameId: `${userId1}${userId2 ? ` (${userId2})` : ''}`, 
-        userEmail: user.email 
+    navigate('/payment', {
+      state: {
+        product: selectedProduct,
+        gameId: `${userId1}${userId2 ? ` (${userId2})` : ''}`,
+        userEmail: user.email
       }
     });
   };
 
   return (
     <div className="Dashboard-container" style={{ paddingBottom: selectedProduct ? '150px' : '40px', justifyContent: 'flex-start', maxWidth: '100%', overflowX: 'hidden', boxSizing: 'border-box' }}>
-      
+
       {/* Header Container */}
-      <div style={{width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: 'clamp(20px, 4vw, 40px)', paddingLeft: 'clamp(15px, 4vw, 30px)', paddingRight: 'clamp(15px, 4vw, 30px)', boxSizing: 'border-box'}}>
-        <Link 
-          to="/dashboard" 
+      <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: 'clamp(20px, 4vw, 40px)', paddingLeft: 'clamp(15px, 4vw, 30px)', paddingRight: 'clamp(15px, 4vw, 30px)', boxSizing: 'border-box' }}>
+        <Link
+          to="/dashboard"
           style={{
-            marginBottom: '20px', 
-            background: 'rgba(255, 255, 255, 0.1)', 
-            padding: '10px 20px', 
-            borderRadius: '10px', 
-            color: 'white', 
+            marginBottom: '20px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            padding: '10px 20px',
+            borderRadius: '10px',
+            color: 'white',
             textDecoration: 'none',
             display: 'inline-block',
             backdropFilter: 'blur(10px)',
@@ -114,8 +114,8 @@ function BrandProduk() {
         >
           ← Kembali ke Dashboard
         </Link>
-        <h1 style={{color: 'white', textAlign: 'left', margin: '0 0 30px 0'}}>Top Up: {decodedBrand}</h1>
-        
+        <h1 style={{ color: 'white', textAlign: 'left', margin: '0 0 30px 0' }}>Top Up: {decodedBrand}</h1>
+
         {/* STEP 1: ID Input */}
         <div style={{ width: '100%', background: '#1e293b', borderRadius: '15px', padding: 'clamp(15px, 4vw, 25px)', marginBottom: '30px', border: '1px solid #334155', boxSizing: 'border-box' }}>
           <h2 style={{ color: 'white', display: 'flex', alignItems: 'center', gap: '10px', marginTop: 0, fontSize: '1.4rem' }}>
@@ -123,20 +123,20 @@ function BrandProduk() {
             Masukkan Data Akun
           </h2>
           <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginTop: '20px' }}>
-             <input 
-               type="text" 
-               placeholder="Masukkan Nomor Tujuan / Game ID"
-               value={userId1}
-               onChange={(e) => setUserId1(e.target.value)}
-               style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
-             />
-             <input 
-               type="text" 
-               placeholder="Server / Zone ID (Bila Ada)"
-               value={userId2}
-               onChange={(e) => setUserId2(e.target.value)}
-               style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
-             />
+            <input
+              type="text"
+              placeholder="Masukkan Nomor Tujuan / Game ID"
+              value={userId1}
+              onChange={(e) => setUserId1(e.target.value)}
+              style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
+            />
+            <input
+              type="text"
+              placeholder="Server / Zone ID (Bila Ada)"
+              value={userId2}
+              onChange={(e) => setUserId2(e.target.value)}
+              style={{ flex: '1 1 100%', minWidth: '150px', padding: '15px', borderRadius: '10px', border: '1px solid #475569', background: '#0f172a', color: 'white', outline: 'none', fontSize: '1rem', boxSizing: 'border-box' }}
+            />
           </div>
           <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '15px' }}>Pastikan data User ID sudah sesuai agar pesanan segera masuk tanpa kendala. Segala bentuk kesalahan input menjadi tanggungjawab pembeli.</p>
         </div>
@@ -158,7 +158,7 @@ function BrandProduk() {
                 onClick={() => setSelectedProduct(product)}
               />
             ))}
-            {filteredProd.length === 0 && <p style={{color: '#94a3b8', fontStyle: 'italic'}}>Tidak ada produk tersedia saat ini.</p>}
+            {filteredProd.length === 0 && <p style={{ color: '#94a3b8', fontStyle: 'italic' }}>Tidak ada produk tersedia saat ini.</p>}
           </div>
         </div>
 
@@ -177,12 +177,12 @@ function BrandProduk() {
             <p style={{ color: '#94a3b8', margin: '0 0 5px', fontSize: '14px' }}>Total Harga Pembayaran</p>
             <h2 style={{ margin: 0, color: '#10b981', fontSize: '1.8rem', fontWeight: 800 }}>Rp {selectedProduct.price?.toLocaleString('id-ID')}</h2>
           </div>
-          
+
           {/* Prevent buy if ID is empty */}
-          <button 
+          <button
             onClick={handlePayment}
             disabled={!userId1}
-            style={{ 
+            style={{
               padding: '16px 45px', borderRadius: '12px', border: 'none',
               background: userId1 ? 'linear-gradient(135deg, #10b981, #059669)' : '#475569',
               color: 'white', fontWeight: 'bold', fontSize: '1.1rem',

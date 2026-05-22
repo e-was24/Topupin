@@ -2,11 +2,22 @@
    FOOTER VERSION STYLING
    ========================================================================== */
 .version-footer {
-  background-color: #090a0f; /* Sedikit lebih gelap dari background utama */
+  /* Sedikit lebih gelap dari background utama */
   border-top: 1px solid #2d3142;
   padding: 20px 0;
   width: 100%;
-  margin-top: 60px; /* Jarak dari grid card di atasnya */
+  margin-top: 0px;
+  height: 15dvh;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  /* Jarak dari grid card di atasnya */
+  background: #141124;
+  background-image:
+    radial-gradient(at 0% 100%, rgba(94, 63, 23, 0.5) 0, transparent 50%),
+    radial-gradient(at 50% 100%, hsla(225, 39%, 30%, 0.5) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(339, 49%, 30%, 0.5) 0, transparent 50%);
+  ;
 }
 
 .version-container {
@@ -18,10 +29,12 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+
 }
 
 .version-text {
-  color: #6b7280; /* Abu-abu redup */
+  color: #6b7280;
+  /* Abu-abu redup */
   font-size: 0.85rem;
   margin: 0;
 }
@@ -38,13 +51,16 @@
 }
 
 .version-badge {
-  background-color: rgba(10, 228, 72, 0.1); /* Efek transparan hijau GSAP */
-  color: #0ae448; /* Hijau Neon */
+  background-color: rgba(10, 228, 72, 0.1);
+  /* Efek transparan hijau GSAP */
+  color: #0ae448;
+  /* Hijau Neon */
   border: 1px solid rgba(10, 228, 72, 0.3);
   padding: 2px 8px;
   border-radius: 20px;
   font-weight: 600;
-  font-family: monospace; /* Gaya font kode agar khas tech */
+  font-family: monospace;
+  /* Gaya font kode agar khas tech */
   box-shadow: 0 0 10px rgba(10, 228, 72, 0.1);
 }
 

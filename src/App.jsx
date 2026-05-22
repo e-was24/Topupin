@@ -1,16 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import "./App.css";
+import "./components/version.css";
 
 // 1. Komponen biasa & Asset Tetap Di-import Normal
 import Version from "./components/Version";
 import Navbar from "./components/Navbar";
 import Button from "./components/Button";
 import Popup from "./components/Popup";
-import Notfound from "./pages/NotFound"; // NotFound dipanggil langsung untuk fallback rute salah
+import Notfound from "./pages/NotFound";
 import LogoImg from "./assets/TOPUPIN.png";
 
-// 2. Menggunakan LAZY IMPORT secara benar (Hapus import normalnya di atas)
+// 2. Lazy Imports
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -22,7 +23,24 @@ const HargaList = lazy(() => import("./pages/HargaList"));
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Efek untuk memantau status login secara real-time dari local storage / Supabase token
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      // Menggunakan trik deteksi serbaguna token auth yang kita bahas sebelumnya
+      const hasToken = Object.keys(localStorage).some(key => key.includes("auth-token")) || !!localStorage.getItem("token");
+      setIsLoggedIn(hasToken);
+    };
+
+    checkLoginStatus();
+
+    // Opsional: Listen jika ada perubahan storage dari tab lain atau event custom
+    window.addEventListener("storage", checkLoginStatus);
+    return () => window.removeEventListener("storage", checkLoginStatus);
+  }, []);
+
+  // Menu bawaan yang HANYA muncul jika user BELUM login
   const menus = [
     { text: "Beranda", link: "/" },
     { text: "Cek ID", link: "/cek-id" },
@@ -31,8 +49,10 @@ function App() {
 
   return (
     <Router>
+      {/* Oper data isLoggedIn ke Navbar agar kondisi penayangan list menu bekerja sempurna */}
       <Navbar
         menus={menus}
+        user={isLoggedIn} // Mengirim status login sebagai props 'user' ke Navbar Anda
         NavigationName="navbar"
         navContainer="nav-container"
         navLogo="nav-logo"
@@ -42,11 +62,23 @@ function App() {
         navButton="nav-button"
         logo={LogoImg}
       />
-      
+
       {/* 3. BUNGKUS ROUTES DENGAN SUSPENSE */}
+      {/* BUNGKUS ROUTES DENGAN SUSPENSE LOADER YANG BARU */}
       <Suspense fallback={
-        <div style={{ textAlign: "center", padding: "50px", color: "#e3e3e3" }}>
-          Memuat Halaman...
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+          color: "#e3e3e3",
+          gap: "15px"
+        }}>
+          <div className="page-loader-spinner"></div>
+          <span style={{ fontSize: "0.9rem", color: "#94a3b8", letterSpacing: "1px" }}>
+            MEMUAT HALAMAN...
+          </span>
         </div>
       }>
         <Routes>
@@ -62,6 +94,7 @@ function App() {
         </Routes>
       </Suspense>
 
+      {/* Tombol Hubungi Kami / CS */}
       <Button
         className="btn btn-cs"
         text={

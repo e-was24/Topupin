@@ -26,6 +26,7 @@ function Button(props) {
       id={props.id}
       type={props.type || "button"} // Default ke "button" jika tidak diisi
       disabled={props.disabled}
+      heft={props.href} // Untuk tombol yang berfungsi sebagai link biasa (bukan React Router Link)
     >
       {props.text || props.children}
     </button>

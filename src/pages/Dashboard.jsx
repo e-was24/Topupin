@@ -33,7 +33,6 @@ function Dashboard() {
 
   // 2. Fetch Data Produk dengan Caching & Background Refresh
   useEffect(() => {
-    // Ambil data dari cache localstorage terlebih dahulu agar UI cepat muncul
     const cachedData = localStorage.getItem("lastPricelist");
     if (cachedData) {
       try {
@@ -68,7 +67,7 @@ function Dashboard() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(validData, null, 2),
-          }).catch(() => null); // Silent catch
+          }).catch(() => null);
         }
       } catch (err) {
         if (!localStorage.getItem("lastPricelist")) {
@@ -87,7 +86,6 @@ function Dashboard() {
 
   // 3. Logic Grouping & Alfabet (Memoized untuk Performa)
   const { groupedByCategory, sortedCategories, validLetters } = useMemo(() => {
-    // Grouping per Brand
     const groupedBrands = dataProduk.reduce((acc, product) => {
       const bName = product.brand || "Lainnya";
       if (!acc[bName]) {
@@ -104,7 +102,6 @@ function Dashboard() {
 
     const uniqueBrands = Object.values(groupedBrands);
 
-    // Grouping per Kategori untuk "Rak"
     const byCategory = uniqueBrands.reduce((acc, brandInfo) => {
       if (!acc[brandInfo.category]) acc[brandInfo.category] = [];
       acc[brandInfo.category].push(brandInfo);
@@ -186,22 +183,22 @@ function Dashboard() {
         style={{
           position: "fixed",
           right: "20px",
-          top: "53dvh", // Diubah ke 50% dvh agar pas di tengah vertikal bersama translateY(-50%)
+          top: "50dvh",
           transform: `translateY(-50%) ${showAlphabet ? "translateX(0)" : "translateX(150%)"}`,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between", // Mendorong huruf membagi rata ruang yang tersedia
-          alignItems: "center", // Memastikan huruf pas di tengah secara horizontal
+          justifyContent: "space-between",
+          alignItems: "center",
           background: "rgba(15, 23, 42, 0.9)",
           backdropFilter: "blur(10px)",
-          padding: "3px 8px", // Menambah padding atas-bawah sedikit agar huruf pertama & terakhir tidak mepet border
+          padding: "3px 8px",
           borderRadius: "30px",
           zIndex: 100,
           border: "1px solid rgba(255,255,255,0.1)",
           transition: "all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
           opacity: showAlphabet ? 1 : 0,
           height: "70dvh",
-          overflowY: "auto", // Pengaman: Jika layar terlalu kerdil, konten akan ter-scroll di DALAM border, tidak meluber keluar
+          overflowY: "auto",
         }}
       >
         <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
@@ -215,7 +212,11 @@ function Dashboard() {
                   document
                     .getElementById(`rak-${letter}`)
                     ?.scrollIntoView({ behavior: "smooth" });
-                  if (window.innerWidth < 768) setShowAlphabet(false);
+                  if (window.innerWidth < 768) {
+                    setTimeout(() => {
+                      setShowAlphabet(false);
+                    }, 300);
+                  }
                 }
               }}
               style={{
@@ -223,12 +224,12 @@ function Dashboard() {
                 fontSize: "0.7em",
                 fontWeight: "bold",
                 cursor: isValid ? "pointer" : "not-allowed",
-                padding: "2px 0", // Memberi sedikit jarak antar huruf secara vertikal
+                padding: "2px 0",
                 textAlign: "center",
                 transition: "0.2s",
                 transform: isValid ? "scale(1.1)" : "scale(1)",
-                flexShrink: 1, // Memaksa setiap elemen huruf mengecil jika ruangannya sempit
-                width: "100%", // Memastikan text-align center bekerja sempurna
+                flexShrink: 1,
+                width: "100%",
               }}
             >
               {letter}
@@ -293,16 +294,14 @@ function Dashboard() {
                 {category}
               </h2>
 
-              <div
-                className="dashboard-catalog-grid"
-              >
+              <div className="dashboard-catalog-grid">
                 {brands.map((brandInfo, index) => (
                   <Card
                     key={brandInfo.brand}
                     title={brandInfo.brand}
                     text={`${brandInfo.count} Pilihan`}
                     buttonText="Beli"
-                    img={brandInfo.img || "https://picsum.photos/150"}
+                    img={brandInfo.img || "../assets/TOPUPIN.png"}
                     link={`/dashboard/brand/${encodeURIComponent(brandInfo.brand)}`}
                     index={index}
                   />
@@ -314,6 +313,6 @@ function Dashboard() {
       </div>
     </div>
   );
-}
+} 
 
 export default Dashboard;

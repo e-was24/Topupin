@@ -17,7 +17,7 @@ const ProductCard = ({ title, sku, price, isSelected, onClick }) => {
         padding: 'clamp(6px, 1.5vw, 12px) clamp(5px, 1.5vw, 10px)',
         textAlign: 'center',
         minHeight: 'clamp(60px, 15vw, 80px)',
-        width: '100%',
+        width: '300px',
         borderRadius: '10px',
         boxShadow: isSelected ? '0 0 12px rgba(59, 130, 246, 0.3)' : 'none'
       }}

@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+.menu-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    /* Warna indikator loading biru */
+    animation: spinNavbarMenu 0.7s linear infinite;
+}
+
+@keyframes spinNavbarMenu {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* button */
 .btn {
     display: flex;
@@ -17,23 +33,33 @@
     cursor: pointer;
 }
 
+.btn-logout {
+    background: #9b3030;
+    color: white;
+}
+
+.btn-logout:hover {
+    background: #862828;
+    color: white;
+}
+
 /* Button Style ala GSAP */
 .btn-buy {
-  background-color: transparent;
-  border: 2px solid var(--theme-color);
-  color: var(--theme-color);
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.2s ease;
+    background-color: transparent;
+    border: 2px solid var(--theme-color);
+    color: var(--theme-color);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
 }
 
 .btn-buy:hover {
-  background-color: var(--theme-color);
-  color: var(--bg-dark);
-  box-shadow: 0 0 15px var(--theme-color);
+    background-color: var(--theme-color);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--theme-color);
 }
 
 .btn-buy:disabled {
@@ -67,7 +93,8 @@
 
 /* --- LOGIN (Indigo/Royal Blue) --- */
 .btn-login {
-    background: #4F46E5; /* Indigo yang modern */
+    background: #4F46E5;
+    /* Indigo yang modern */
     color: white;
     box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3);
 }
@@ -82,13 +109,15 @@
 /* Register biasanya aksi sekunder, jadi buat lebih kalem tapi tetap elegan */
 .btn-register {
     background: transparent;
-    color: #38BDF8; /* Warna Cyan Sky */
+    color: #38BDF8;
+    /* Warna Cyan Sky */
     border: 2px solid #38BDF8;
     box-shadow: none;
 }
 
 .btn-register:hover:not(:disabled) {
-    background: rgba(56, 189, 248, 0.1); /* Background transparan biru tipis */
+    background: rgba(56, 189, 248, 0.1);
+    /* Background transparan biru tipis */
     color: #7DD3FC;
     border-color: #7DD3FC;
     transform: translateY(-2px);
@@ -124,7 +153,8 @@
     background: linear-gradient(135deg, #1d7529 0%, #165a20 100%);
     color: white;
     border: none;
-    border-radius: 8px; /* Sudut agak kotak tapi lembut */
+    border-radius: 8px;
+    /* Sudut agak kotak tapi lembut */
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
@@ -153,20 +183,21 @@
     bottom: 30px;
     right: 30px;
     z-index: 1000;
-    
+
     /* Styling Button */
     padding: 12px 20px;
     background: linear-gradient(135deg, #38BDF8 0%, #2563EB 100%);
     color: white;
     border: none;
-    border-radius: 50px; /* Bikin bentuk lonjong/kapsul */
+    border-radius: 50px;
+    /* Bikin bentuk lonjong/kapsul */
     font-weight: 600;
     cursor: pointer;
-    
+
     /* Shadow & Glow */
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
     transition: all 0.3s ease;
-    
+
     /* Animasi Mengambang Pelan */
     animation: floating 3s ease-in-out infinite;
 }
@@ -179,9 +210,17 @@
 
 /* Keyframes buat efek gerak naik turun sedikit */
 @keyframes floating {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 .btn-cs .material-symbols-outlined {
@@ -193,16 +232,20 @@
 
 @media (max-width: 600px) {
     .btn-cs {
-        padding: 15px; /* Sama sisi */
-        border-radius: 50%; /* Bulat */
+        padding: 15px;
+        /* Sama sisi */
+        border-radius: 50%;
+        /* Bulat */
         bottom: 20px;
         right: 20px;
     }
-    
+
     .btn-cs span:not(.material-symbols-outlined) {
-        display: none; /* Sembunyiin teks "Customer Service", sisa icon aja */
+        display: none;
+        /* Sembunyiin teks "Customer Service", sisa icon aja */
     }
 }
+
 /* button end */
 
 /* Navigation Bar */
@@ -210,11 +253,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px; /* Padding lebih lebar biar lega */
-    background-color: rgba(15, 23, 42, 0.8); /* Warna asli dengan transparansi */
-    backdrop-filter: blur(10px); /* Efek blur kaca */
+    padding: 15px 50px;
+    /* Padding lebih lebar biar lega */
+    background-color: rgba(15, 23, 42, 0.8);
+    /* Warna asli dengan transparansi */
+    backdrop-filter: blur(10px);
+    /* Efek blur kaca */
     -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Garis tipis biar elegan */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Garis tipis biar elegan */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -239,7 +286,7 @@
     display: flex;
 }
 
-.nav-menu-list{
+.nav-menu-list {
     display: flex;
     list-style: none;
 }
@@ -285,7 +332,7 @@
         position: relative;
         z-index: 2000;
     }
-    
+
     .nav-container {
         width: 100%;
         justify-content: space-between;
@@ -305,23 +352,23 @@
         z-index: 999;
         padding-top: 40px;
     }
-    
+
     .nav-menu.active {
         left: 0;
     }
-    
+
     .nav-menu-list {
         flex-direction: column;
         padding: 0;
         margin: 0;
         align-items: center;
     }
-    
+
     .nav-menu-item {
         margin: 20px 0;
         font-size: 1.2rem;
     }
-    
+
     .nav-button {
         position: fixed;
         left: -120%;
@@ -334,11 +381,11 @@
         z-index: 1000;
         align-items: stretch;
     }
-    
+
     .nav-button.active {
         left: 0;
     }
-    
+
     .nav-button .input-search {
         width: 100% !important;
     }
@@ -351,11 +398,13 @@
         margin: 0 !important;
     }
 }
+
 @media (max-width: 500px) {
     .navbar-searchbar {
         width: 45% !important;
     }
 }
+
 /* Navigation Bar end */
 
 
@@ -368,10 +417,10 @@
     height: 100vh;
     background-color: #141124;
     /* Efek cahaya di pojok kiri atas dan kanan bawah */
-    background-image: 
-        radial-gradient(at 0% 0%, rgb(94, 63, 23) 0, transparent 50%), 
-        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+    background-image:
+        radial-gradient(at 0% 0%, rgb(94, 63, 23) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
     position: relative;
     overflow: hidden;
 }
@@ -380,7 +429,10 @@
 .hero::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0.05;
     pointer-events: none;
     background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
@@ -391,6 +443,7 @@
     justify-content: center;
     align-items: center;
 }
+
 .hero-title {
     color: white;
     width: 14em;
@@ -424,6 +477,118 @@
     gap: 10px;
     margin-top: 20px;
 }
+
+/* product section landing page */
+
+.products-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #141124;
+    height: 50dvh;
+    padding: 5.5rem 20px;
+}
+
+.products-section .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.products-grid .product-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    /* background */
+    background: #171923;
+    border: 1px solid #2d3142;
+    background-image:
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.05) 0, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.05) 0, transparent 50%);
+    border-radius: 10px;
+    padding: 20px 20px;
+}
+
+.products-grid .product-card:nth-child(2) {
+    animation: fadeInUp 3s ease-in-out infinite;
+    background: #1c213b;
+    border: 1px solid #2c3663;
+    background-image:
+        radial-gradient(circle at 10% 10%, rgba(36, 67, 94, 0.05) 0, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(36, 67, 94, 0.05) 0, transparent 50%);
+}
+
+.products-grid .product-card .status {
+    display: block;
+    margin-top: 10px;
+    padding: 4px 8px;
+    background-color: #0c64474d;
+    color: white;
+    font-size: 0.75em;
+    border-radius: 30px;
+    border: 1px solid #13662b;
+    text-transform: uppercase;
+    color: #0ae448;
+    box-shadow: 0 0 10px #0c6b2760;
+    letter-spacing: 2px;
+}
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateY(-5px);
+        opacity: 1;
+
+    }
+
+    100% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+}
+
+.LandingPage-listProduk {
+    background: #141124;
+    padding: 20px;
+}
+
+.aboutUs {
+    height: 100dvh;
+    background-image: url("../assets/about.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.aboutUs .menu-cover {
+    background: rgba(20, 17, 36, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px;
+    text-align: center;
+    height: 100%;
+    width: 100dvw;
+    backdrop-filter: blur(5px);
+}
+
+/* product end */
+
 
 /* landingpage end */
 
@@ -460,7 +625,7 @@
     color: #fff;
     font-size: 24px;
     cursor: pointer;
-  }
+}
 
 
 
@@ -472,126 +637,137 @@
    1. VARIABLE & CORE STYLING (Tema Gelap Premium ala GSAP)
    ========================================================================== */
 :root {
-  --bg-dark: #0e1015;       /* Warna background utama website */
-  --card-bg: #171923;       /* Warna background kotak card */
-  --text-main: #f3f4f6;     /* Warna teks putih terang */
-  --text-muted: #9ca3af;    /* Warna teks abu-abu halus */
-  --border-color: #2d3142;  /* Warna border default saat diam */
+    --bg-dark: #0e1015;
+    /* Warna background utama website */
+    --card-bg: #171923;
+    /* Warna background kotak card */
+    --text-main: #f3f4f6;
+    /* Warna teks putih terang */
+    --text-muted: #9ca3af;
+    /* Warna teks abu-abu halus */
+    --border-color: #2d3142;
+    /* Warna border default saat diam */
 }
 
 /* ==========================================================================
    2. LAYOUT GRID RESPONSIF (Cocok untuk banyak produk digital)
    ========================================================================== */
 .card-container {
-  display: grid;
-  /* Otomatis membagi kolom: minimal lebar card 220px, maksimal mengisi sisa ruang */
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;          /* Jarak antar card */
-  padding: 40px 20px;
-  width: 100%;
-  max-width: 1400px;  /* Batas lebar maksimal halaman agar tidak terlalu melar */
-  margin: 0 auto;     /* Membuat posisi grid tepat di tengah layar */
-  box-sizing: border-box;
+    display: grid;
+    /* Otomatis membagi kolom: minimal lebar card 220px, maksimal mengisi sisa ruang */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    /* Jarak antar card */
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1400px;
+    /* Batas lebar maksimal halaman agar tidak terlalu melar */
+    margin: 0 auto;
+    /* Membuat posisi grid tepat di tengah layar */
+    box-sizing: border-box;
 }
 
 /* ==========================================================================
    3. BASE CARD STYLING (Kompak & Hemat Ruang)
    ========================================================================== */
 .card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
-  
-  /* PENTING: Membuat internal layout card menjadi flex vertikal */
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  
-  /* PENTING: Memaksa tinggi card mengikuti baris tertinggi di grid-nya */
-  height: 100%; 
-  width: 300px;
-  box-sizing: border-box;
-  
-  color: var(--text-main);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+
+    /* PENTING: Membuat internal layout card menjadi flex vertikal */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    /* PENTING: Memaksa tinggi card mengikuti baris tertinggi di grid-nya */
+    height: 100%;
+    width: 300px;
+    box-sizing: border-box;
+
+    color: var(--text-main);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Memperbaiki orientasi kotak (Square) Card di Layar HP */
 @media (max-width: 600px) {
-  .card {
-    width: 100%;
-    padding: 10px;
-    gap: 8px;
-    border-radius: 10px;
-  }
-  
-  /* Sembunyikan tombol detail di HP agar kartu tetap berbentuk kotak */
-  .card .card-footer {
-    display: none !important;
-  }
+    .card {
+        width: 100%;
+        padding: 10px;
+        gap: 8px;
+        border-radius: 10px;
+    }
 
-  /* Kecilkan judul dan gambar khusus HP */
-  .card-title {
-    font-size: 0.9rem !important;
-  }
-  
-  .card-img img {
-    height: 80px !important;
-  }
+    /* Sembunyikan tombol detail di HP agar kartu tetap berbentuk kotak */
+    .card .card-footer {
+        display: none !important;
+    }
+
+    /* Kecilkan judul dan gambar khusus HP */
+    .card-title {
+        font-size: 0.9rem !important;
+    }
+
+    .card-img img {
+        height: 80px !important;
+    }
 }
 
 /* Efek Hover Card (Mengangkat & Memancarkan Cahaya Neon) */
 .card:hover {
-  transform: translateY(-5px);
-  border-color: var(--theme-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
-              0 0 15px var(--theme-glow);
+    transform: translateY(-5px);
+    border-color: var(--theme-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 15px var(--theme-glow);
 }
 
 /* Konten di dalam Card */
 .card-title {
-  font-size: 1.2rem;  /* Ukuran pas untuk nama produk digital */
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-main);
-  /* Potong judul menjadi '...' jika terlalu panjang agar card tetap rapi */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 1.2rem;
+    /* Ukuran pas untuk nama produk digital */
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-main);
+    /* Potong judul menjadi '...' jika terlalu panjang agar card tetap rapi */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-text {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  margin: 0;
-  
-  /* PENTING: Memberikan ruang tumbuh agar mendesak footer ke paling bawah */
-  flex-grow: 1; 
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
 
-  /* Mengunci teks maksimal 3 baris agar tinggi area teks seimbang */
-  display: -webkit-box;
-  -webkit-line-clamp: 3; 
-  -webkit-box-orient: vertical;  
-  overflow: hidden;
+    /* PENTING: Memberikan ruang tumbuh agar mendesak footer ke paling bawah */
+    flex-grow: 1;
+
+    /* Mengunci teks maksimal 3 baris agar tinggi area teks seimbang */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .card-img img {
-  width: 100%;
-  height: 130px;      /* Tinggi proporsional untuk katalog massal */
-  border-radius: 8px;
-  object-fit: cover;  /* Gambar otomatis terpotong rapi di tengah tanpa penyet */
-  border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    height: 130px;
+    /* Tinggi proporsional untuk katalog massal */
+    border-radius: 8px;
+    object-fit: cover;
+    /* Gambar otomatis terpotong rapi di tengah tanpa penyet */
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card-footer {
-  /* Memastikan tombol selalu konsisten di dasar card */
-  margin-top: auto; 
-  width: 100%;
+    /* Memastikan tombol selalu konsisten di dasar card */
+    margin-top: auto;
+    width: 100%;
 }
 
 /* ==========================================================================
@@ -600,34 +776,36 @@
 
 /* Card ke-1, 4, 7, dst: HIJAU GSAP (GreenSock Signature) */
 .card:nth-child(3n+1) {
-  --theme-color: #0ae448;
-  --theme-glow: rgba(10, 228, 72, 0.15);
+    --theme-color: #0ae448;
+    --theme-glow: rgba(10, 228, 72, 0.15);
 }
+
 .card:nth-child(3n+1) .card-title {
-  background: linear-gradient(45deg, #fff, #0ae448);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    background: linear-gradient(45deg, #fff, #0ae448);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Card ke-2, 5, 8, dst: CYAN TECH */
 .card:nth-child(3n+2) {
-  --theme-color: #00df89;
-  --theme-glow: rgba(0, 223, 137, 0.15);
+    --theme-color: #00df89;
+    --theme-glow: rgba(0, 223, 137, 0.15);
 }
+
 .card:nth-child(3n+2) .card-title {
-  background: linear-gradient(45deg, #fff, #00df89);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    background: linear-gradient(45deg, #fff, #00df89);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Card ke-3, 6, 9, dst: PURPLE ELECTRIC */
 .card:nth-child(3n+3) {
-  --theme-color: #ab47bc;
-  --theme-glow: rgba(171, 71, 188, 0.15);
-}
-.card:nth-child(3n+3) .card-title {
-  background: linear-gradient(45deg, #fff, #ab47bc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    --theme-color: #ab47bc;
+    --theme-glow: rgba(171, 71, 188, 0.15);
 }
 
+.card:nth-child(3n+3) .card-title {
+    background: linear-gradient(45deg, #fff, #ab47bc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
