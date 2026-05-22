@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+// Jika server.js ingin mengambil data dari src/data/
+const products = require("../src/data/digiflazzProduct.json");
 
 const app = express();
 
@@ -12,10 +14,6 @@ app.use(express.json());
 const PAKASIR_PROJECT = process.env.PAKASIR_PROJECT_SLUG;
 const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 
-/**
- * 1. ENDPOINT: BUAT TRANSAKSI
- * URL Akses: https://domain-kamu.vercel.app/api/pembayaran
- */
 app.post("/api/pembayaran", async (req, res) => {
   const { amount, email, game_id, method } = req.body;
 

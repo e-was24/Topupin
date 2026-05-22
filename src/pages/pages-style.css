@@ -21,7 +21,9 @@ body {
 
 /* Card Layout Consistency */
 .catalog-grid {
-    display: grid;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 22px;
     width: 100%;
@@ -119,6 +121,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+.register-form-group-cover  {
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-form-group-cover .register-form-group {
+  width: 48%;
 }
 
 .login-form-group label, 
@@ -279,13 +289,16 @@ p {
 
 .menu-btn-real {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: 'Poppins', sans-serif;
   top: 25dvh;
   left: 0;
   width: fit-content;
   height: fit-content;
   border-radius: 0 30px 30px 0;
-  padding: 10px 20px 10px 15px; /* Tambah padding kanan agar estetik */
+  padding: 10px 20px 10px 15px; 
   background: white;
   color: black;
   font-size: 18px;

@@ -36,12 +36,12 @@ export const useLogin = () => {
 
       if (authError) {
         // Tangani error email belum dikonfirmasi secara spesifik
-        if (authError.message.toLowerCase().includes("email not confirmed")) {
+        if (authError.message.toLowerCase().includes("confirmed") || authError.message.toLowerCase().includes("verification")) {
           return {
             success: false,
             emailNotConfirmed: true,
             email: emailForAuth,
-            msg: "Email kamu belum dikonfirmasi. Silakan cek inbox (atau folder spam) dan klik link verifikasi.",
+            msg: "Email kamu belum dikonfirmasi. Silakan masukkan kode OTP untuk memverifikasi akun Anda.",
           };
         }
         throw authError;
@@ -55,14 +55,14 @@ export const useLogin = () => {
     }
   };
 
-  // Kirim ulang email verifikasi
+  // Kirim ulang kode OTP/verifikasi
   const resendVerification = async (email) => {
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: email,
     });
     if (error) return { success: false, msg: error.message };
-    return { success: true, msg: "Email verifikasi sudah dikirim ulang. Silakan cek inbox kamu." };
+    return { success: true, msg: "Kode verifikasi baru telah dikirim ke email Anda." };
   };
 
   return { formData, handleChange, login, isSubmitting, resendVerification };

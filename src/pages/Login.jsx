@@ -5,24 +5,32 @@ import "./pages-style.css";
 
 function Login() {
   const navigate = useNavigate();
-  const { formData, handleChange, login, isSubmitting, resendVerification } = useLogin();
+  const { formData, handleChange, login, isSubmitting, resendVerification } =
+    useLogin();
 
+  // Jalur logika handleLogin di dalam komponen Login.jsx kamu:
   const handleLogin = async (e) => {
     e.preventDefault();
     const result = await login();
 
     if (result.success) {
-      alert("Login Berhasil! Selamat datang.");
-      navigate("/dashboard");
-    } else if (result.emailNotConfirmed) {
-      // Tawarkan opsi kirim ulang email verifikasi
-      const resend = window.confirm(
-        result.msg + "\n\nKlik OK untuk kirim ulang email verifikasi."
-      );
-      if (resend) {
-        const resendResult = await resendVerification(result.email);
-        alert(resendResult.msg);
-      }
+      alert("Login berhasil!");
+      navigate("/dashboard", { replace: true });
+    // } else if (result.emailNotConfirmed) {
+    //   // Simpan email ke localStorage untuk kebutuhan OTP
+    //   localStorage.setItem("email_for_otp", result.email);
+
+    //   const resend = window.confirm(
+    //     "Akun Anda belum diverifikasi.\n\nKlik OK jika Anda ingin kami mengirimkan kode verifikasi baru ke email Anda (" + result.email + ")."
+    //   );
+
+    //   if (resend) {
+    //     const resendResult = await resendVerification(result.email);
+    //     alert(resendResult.msg);
+    //   }
+      
+    //   // Arahkan pengguna ke halaman OTP
+    //   navigate("/otp", { replace: true });
     } else {
       alert("Gagal Login: " + result.msg);
     }

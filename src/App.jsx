@@ -11,6 +11,7 @@ import CekId from "./pages/CekId";
 import HargaList from "./pages/HargaList";
 import Notfound from "./pages/NotFound";
 import Register from "./pages/Register";
+// import Otp from "./pages/Otp";
 import Navbar from "./components/Navbar";
 import Button from "./components/Button";
 import Popup from "./components/Popup";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/cek-id" element={<CekId />} />
         <Route path="/produk" element={<HargaList />} />
+        {/* <Route path="/otp" element={<Otp />} /> */}
       </Routes>
       <Button
         className="btn btn-cs"

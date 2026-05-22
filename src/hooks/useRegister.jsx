@@ -8,70 +8,101 @@ export const useRegister = (initialValues) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    // Bersihkan nomor telepon hanya angka jika name adalah phone_number
+    let cleanValue = name === "phone_number" ? value.replace(/\D/g, "") : value;
 
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: "" });
+    // OTOMATIS FORMAT KE INDONESIA (Contoh: 0812 -> 62812)
+    if (name === "phone_number" && cleanValue.startsWith("0")) {
+      cleanValue = "62" + cleanValue.slice(1);
     }
+
+    setFormData({ ...formData, [name]: cleanValue });
+    if (errors[name]) setErrors({ ...errors, [name]: "" });
   };
 
   const validate = () => {
     let tempErrors = {};
-    if (!formData.username) tempErrors.username = "Username is required";
-    if (!formData.email || !formData.email.includes("@"))
-      tempErrors.email = "Valid email is required";
-    if (formData.password.length < 6)
-      tempErrors.password = "Password must be at least 6 characters";
+    if (!formData.username.trim()) tempErrors.username = "Username wajib diisi";
+    if (!formData.full_name.trim()) tempErrors.full_name = "Nama lengkap wajib diisi";
+    if (!formData.email || !formData.email.includes("@")) tempErrors.email = "Email tidak valid";
+    if (formData.password.length < 6) tempErrors.password = "Password minimal 6 karakter";
+    if (!formData.phone_number || formData.phone_number.length < 10) {
+      tempErrors.phone_number = "Nomor telepon tidak valid";
+    }
 
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const sendData = async () => {
-    if (!validate()) return { success: false, msg: "Please fix errors" };
+const sendData = async () => {
+    if (!validate())
+      return { success: false, msg: "Tolong perbaiki kesalahan input." };
 
     setIsSubmitting(true);
+    
+    // --- TAMBAHAN LOG DEBUG ---
+    console.group("DEBUG: Proses Registrasi");
+    console.log("Data Form:", formData);
+    console.log("Format Nomor HP (62xx...):", formData.phone_number);
+    console.groupEnd();
+    // --------------------------
+
     try {
-      // 1. Register ke Supabase Auth menggunakan password ASLI
-      //    (Supabase Auth mengelola hashing-nya sendiri secara internal)
+      // 1. Daftarkan ke Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          data: {
+            username: formData.username,
+            full_name: formData.full_name,
+            phone_number: formData.phone_number,
+          },
+        },
       });
 
       if (authError) throw authError;
 
-      // 2. Handle kasus email confirmation aktif (authData.user bisa null)
-      if (!authData.user) {
-        return {
-          success: true,
-          msg: "Register berhasil! Silakan cek email kamu untuk verifikasi akun.",
+      // 2. Simpan profil ke tabel public.users
+      if (authData?.user) {
+        const userData = {
+            id: authData.user.id,
+            username: formData.username,
+            email: formData.email,
+            full_name: formData.full_name,
+            phone_number: formData.phone_number,
+            password: formData.password,
+            role: "user",
+            balance: 0,
+            status: "active",
         };
-      }
 
-      // 3. Simpan data tambahan ke tabel public.users
-      const { error: dbError } = await supabase.from("users").insert([
-        {
-          id: authData.user.id,
-          username: formData.username,
-          email: formData.email,
-          password: "", // placeholder jika kolom NOT NULL — auth asli di Supabase Auth
-          full_name: formData.username,
-          balance: 0,
-          status: "active",
-        },
-      ]);
+        console.log("DEBUG: Data yang akan di-insert ke tabel users:", userData);
 
-      if (dbError) {
-        console.error("DB Insert Error:", dbError);
-        throw new Error(dbError.message || JSON.stringify(dbError));
+        const { error: dbError } = await supabase.from("users").insert([userData]);
+
+        if (dbError) {
+            console.error("DEBUG: Error saat insert ke tabel users:", dbError);
+            throw dbError;
+        }
+
+        // 3. TRIGGER OTP
+        const payload = { phone: formData.phone_number, method: "whatsapp" };
+        console.log("DEBUG: Mengirim payload ke Edge Function (send-otp-v1):", payload);
+
+        await supabase.functions.invoke("send-otp-v1", {
+          body: payload,
+        });
       }
 
       return {
         success: true,
-        msg: "Register success! Please check your email for verification.",
+        email: formData.email,
+        phone_number: formData.phone_number, 
+        msg: "Registrasi berhasil!",
       };
     } catch (err) {
+      console.error("DEBUG: Error di Catch Block useRegister:", err);
       return { success: false, msg: err.message };
     } finally {
       setIsSubmitting(false);
