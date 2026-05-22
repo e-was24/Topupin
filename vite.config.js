@@ -42,7 +42,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       "/api/pembayaran": "http://localhost:5000",
-      "/webhook/pakkasir": "http://localhost:5173", // Actually webhook should probably be hit directly or proxied
+      "/webhook/pakkasir": "http://localhost:5173", 
       "/api/digiflazz": {
         target: 'https://api.digiflazz.com',
         changeOrigin: true,
@@ -50,4 +50,19 @@ export default defineConfig({
       }
     }
   },
+  
+  // ================= TAMBAHKAN BLOK BUILD DI BAWAH INI =================
+  build: {
+    rollupOptions: {
+      output: {
+        // Memecah library dari node_modules (Supabase, Axios, Crypto-js, dll) menjadi file terpisah
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        }
+      }
+    }
+  }
+  // =====================================================================
 })
