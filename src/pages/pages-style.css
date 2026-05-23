@@ -9,13 +9,14 @@
     --input-bg: #0f172a;       /* Latar belakang input lebih gelap dari kartu */
     --border-color: #334155;   /* Border tipis yang tidak mencolok */
     --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    --new-style-background: #0f172a;
 }
 
 /* Base Styles */
 body {
     margin: 0;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-dark);
+    background-color: var(--new-style-background);
     color: var(--text-main);
 }
 

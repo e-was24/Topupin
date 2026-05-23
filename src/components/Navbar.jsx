@@ -78,12 +78,12 @@ function Navbar(props) {
   const handleHamburgerClick = () => {
     if (!isMobileMenuOpen) {
       setIsMenuLoading(true);
-      
+
       // Simulasi loading selama 400 milidetik sebelum menu benar-benar dibuka
       setTimeout(() => {
         setIsMobileMenuOpen(true);
         setIsMenuLoading(false);
-      }, 400); 
+      }, 400);
     } else {
       setIsMobileMenuOpen(false);
     }
@@ -107,15 +107,15 @@ function Navbar(props) {
                   <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
                 </svg>
               </span>
-              <input 
-                type="text" 
-                placeholder="Cari Game / Produk..." 
-                className="input-search" 
-                value={searchTerm} 
-                onChange={(e) => { setSearchTerm(e.target.value); setShowDropdown(true); }} 
-                onFocus={() => setShowDropdown(true)} 
-                onBlur={() => setTimeout(() => setShowDropdown(false), 200)} 
-                style={{ background: "transparent", border: "none", color: "white", width: "100%", padding: "5px 8px", outline: "none", fontSize: '0.85rem' }} 
+              <input
+                type="text"
+                placeholder="Cari Game / Produk..."
+                className="input-search"
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); setShowDropdown(true); }}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                style={{ background: "transparent", border: "none", color: "white", width: "100%", padding: "5px 8px", outline: "none", fontSize: '0.85rem' }}
               />
             </div>
 
@@ -163,6 +163,7 @@ function Navbar(props) {
             <ul className={props.navMenuList}>
               {user ? (
                 <>
+                  {/* Menu Khusus User yang Sudah Login */}
                   <li className={props.navMenuItem} onClick={() => setIsMobileMenuOpen(false)}>
                     <Link to="/dashboard">Dashboard</Link>
                   </li>
@@ -175,6 +176,7 @@ function Navbar(props) {
                 </>
               ) : (
                 <>
+                  {/* Menu Khusus Guest / Belum Login */}
                   {props.menus.map((item, index) => (
                     <li
                       key={`menu-${index}`}
@@ -187,10 +189,37 @@ function Navbar(props) {
                 </>
               )}
             </ul>
+
+            {/* Menyimpan div tombol di luar <ul> agar struktur HTML tetap valid */}
+            <div className={`${props.navButton} ${isMobileMenuOpen ? 'active' : ''}`} style={{ gap: "15px", alignItems: "center" }}>
+              {user ? (
+                <Button
+                  text="Keluar"
+                  className="btn btn-logout"
+                  style={{ color: "#ef4444", borderColor: "#ef4444" }}
+                  onClick={handleLogout}
+                />
+              ) : (
+                <>
+                  <Button
+                    text="Register"
+                    className="btn btn-register"
+                    to="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+                  <Button
+                    text="Login"
+                    className="btn btn-login"
+                    to="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  />
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Tombol Auth (Login / Register / Logout) */}
+        {/* Tombol Auth (Login / Register / Logout)
         <div className={`${props.navButton} ${isMobileMenuOpen ? 'active' : ''}`} style={{ gap: "15px", alignItems: "center" }}>
           {user ? (
             <Button
@@ -207,15 +236,15 @@ function Navbar(props) {
                 to="/register"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
-              <Button 
-                text="Login" 
-                className="btn btn-login" 
-                to="/login" 
+              <Button
+                text="Login"
+                className="btn btn-login"
+                to="/login"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
             </>
           )}
-        </div>
+        </div> */}
       </nav>
     </>
   );

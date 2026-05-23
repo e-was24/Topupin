@@ -341,7 +341,7 @@
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 80px;
+        top: 0px;
         flex-direction: column;
         background: rgba(15, 23, 42, 0.98);
         backdrop-filter: blur(20px);
@@ -400,8 +400,20 @@
 }
 
 @media (max-width: 500px) {
+    body {
+        font-size: 50%;
+    }
+
     .navbar-searchbar {
         width: 45% !important;
+    }
+
+    .nav-menu {
+        justify-content: center;
+    }
+
+    .nav-button {
+        height: fit-content;
     }
 }
 
@@ -809,3 +821,82 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+/* ads */
+
+.ads-cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 40dvh;
+    width: 100%; /* Menggunakan 100% mencegah horizontal scroll dibanding 100dvw */
+    margin-top: 10dvh;
+    background-image: url("../assets/Ads-default.png");
+    background-position: center;
+    background-size: cover; /* Diubah ke cover agar gambar memenuhi area desktop */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Efek parallax untuk desktop */
+}
+
+.ads-cover .cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* Perbaikan sintaks gradasi (ditambahkan 'to bottom') */
+    background: linear-gradient(to bottom, #0f172a, #0000005b, #0f172a);
+    backdrop-filter: blur(2px) brightness(50%);
+    -webkit-backdrop-filter: blur(2px) brightness(50%); /* Untuk dukungan safari */
+    height: 100%; /* Mengikuti tinggi parent-nya (.ads-cover) */
+    width: 100%;
+    padding: 0 40px;
+}
+
+.ads-cover .cover .ads-text {
+    color: #858585;
+    font-size: 1rem;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    max-width: 800px; /* Menggunakan max-width agar teks fleksibel dan tidak meluber */
+    width: 100%;
+    line-height: 1.6;
+}
+
+/* --- Media Queries (Responsif) --- */
+
+/* Tablet & Mobile (Layar di bawah 900px) */
+@media (max-width: 900px) {
+    .ads-cover {
+        background-attachment: scroll; /* Mematikan fixed karena berat/buggy di mobile */
+        height: 40dvh; /* Membiarkan tinggi menyesuaikan konten jika teksnya panjang */
+        min-height: 35dvh;
+        padding: 40px 0; /* Memberi ruang atas bawah saat mode auto-height */
+    }
+
+    .ads-cover .cover {
+        height: 100%;
+        min-height: 35dvh;
+        padding: 0 20px;
+    }
+
+    .ads-cover .cover .ads-text {
+        width: 90%;
+        font-size: 0.9rem;
+    }
+}
+
+/* Khusus HP Kecil (Layar di bawah 480px) */
+@media (max-width: 480px) {
+    .ads-cover {
+        margin-top: 5dvh; /* Mengurangi margin atas di HP agar tidak terlalu lowong */
+    }
+    
+    .ads-cover .cover .ads-text {
+        width: 100%;
+        font-size: 0.85rem; /* Ukuran font sedikit lebih kecil agar pas di HP */
+    }
+}
+
+/* ads end */

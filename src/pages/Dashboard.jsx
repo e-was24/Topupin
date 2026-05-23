@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import ErrorRobot from "../components/ErrorRobot";
 import { fetchProducts } from "../api/productApi.js";
+import Ads from "../components/Ads";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -238,10 +239,16 @@ function Dashboard() {
         })}
       </div>
 
+      {/* ads */}
+
+      <Ads />
+
+      {/* ads end */}
+
       {/* Header Section */}
       <div
         style={{
-          textAlign: "left",
+          textAlign: "right",
           width: "100%",
           maxWidth: "1200px",
           marginBottom: "50px",
