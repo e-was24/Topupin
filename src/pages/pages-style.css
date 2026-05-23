@@ -342,3 +342,310 @@ p {
 }
 
 /* card end */
+
+/* about page */
+
+/* Container Utama */
+.about-container {
+    background-color: #0b1120;
+    color: #cbd5e1;
+    min-height: 100vh;
+    font-family: sans-serif;
+    overflow-hidden: hidden;
+}
+
+/* --- HERO SECTION --- */
+.about-hero {
+    position: relative;
+    padding-top: 6rem;
+    padding-bottom: 5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    background-color: #0b1120; /* Warna dasar malam pekat */
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Efek Kotak-Kotak Matematika yang Elegan & Minimalis */
+.about-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    
+    /* Membuat garis horizontal dan vertikal tipis (Grid) */
+    background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    
+    /* Ukuran kotak matematika (25px x 25px). Ubah angka ini untuk memperbesar/memperkecil kotak */
+    background-size: 25px 25px; 
+    
+    /* Masking agar kotak tidak terlalu ramai dan memudar halus di bagian pinggir & bawah */
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 40%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* Ornamen Cahaya Lembut di Belakang Teks agar Kotak Lebih Hidup */
+.about-hero::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Memastikan teks berada di atas kotak-kotak */
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    margin-top: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: #94a3b8;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ornamen Grid & Glow Background */
+.about-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: 
+        linear-gradient(to right, rgba(31, 41, 55, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(31, 41, 55, 0.1) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    margin-top: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: #94a3b8;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- MAIN CONTENT SECTION --- */
+.about-main {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-cols: 1fr;
+    gap: 4rem;
+}
+
+.about-card {
+    background-color: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(30, 41, 59, 0.6);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.card-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 50%;
+    border-radius: 9999px;
+}
+
+.siapa-kami .card-title::after { background: linear-gradient(to right, #6366f1, #a855f7); }
+.visi-misi .card-title::after { background: linear-gradient(to right, #a855f7, #ec4899); }
+
+.card-body p {
+    color: #94a3b8;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+
+.card-body .highlight {
+    color: #818cf8;
+    font-weight: 600;
+}
+
+.sub-box {
+    padding: 1rem;
+    background-color: rgba(30, 41, 59, 0.3);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(30, 41, 59, 0.5);
+    margin-bottom: 1.5rem;
+}
+
+.sub-box strong {
+    display: block;
+    font-size: 1.125rem;
+    background: linear-gradient(to right, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+}
+
+.visi-misi .sub-box:last-child strong {
+    background: linear-gradient(to right, #c084fc, #f472b6);
+}
+
+/* --- FEATURES SECTION --- */
+.about-features {
+    padding: 5rem 1.5rem;
+    border-top: 1px solid rgba(30, 41, 59, 0.4);
+    border-bottom: 1px solid rgba(30, 41, 59, 0.4);
+}
+
+.features-header {
+    text-align: center;
+    max-width: 42rem;
+    margin: 0 auto 4rem auto;
+}
+
+.features-header h2 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #818cf8;
+    text-transform: uppercase;
+}
+
+.features-header p {
+    margin-top: 0.75rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(to bottom, #0f172a, #0e1626);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    border: 1px solid #1e293b;
+    transition: all 0.3s ease;
+}
+
+.feature-icon {
+    margin-bottom: 1.25rem;
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    background-color: rgba(99, 102, 241, 0.1);
+    transition: all 0.3s ease;
+}
+
+.feature-item h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+}
+
+.feature-item p {
+    margin-top: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.75;
+}
+
+/* Hover Effects Fitur */
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.05);
+}
+.feature-item:nth-child(1):hover { border-color: rgba(99, 102, 241, 0.5); }
+.feature-item:nth-child(2):hover { border-color: rgba(168, 85, 247, 0.5); }
+.feature-item:nth-child(3):hover { border-color: rgba(236, 72, 153, 0.5); }
+
+.feature-item:hover .feature-icon {
+    background-color: #6366f1;
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* --- MEDIA QUERIES (RESPONSIF) --- */
+@media (min-width: 640px) {
+    .hero-title { font-size: 3.75rem; }
+    .features-header p { font-size: 2.25rem; }
+}
+
+@media (min-width: 1024px) {
+    .about-hero { padding-top: 8rem; padding-bottom: 7rem; }
+    .about-grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .features-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* about end */
