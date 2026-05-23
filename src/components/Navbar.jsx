@@ -3,6 +3,7 @@ import "./components.css";
 import { Link, useNavigate } from "react-router-dom"; // <-- useLocation dihapus karena dipindahkan ke App.jsx/Suspense
 import { supabase } from "../lib/supabaseClient";
 import Button from "./Button";
+import DefaultImg from "../assets/icon.png";
 
 function Navbar(props) {
   const [user, setUser] = useState(null);
@@ -123,12 +124,57 @@ function Navbar(props) {
             {showDropdown && searchTerm.length > 1 && (
               <div style={{ position: "absolute", top: "calc(100% + 15px)", left: "auto", right: "50%", transform: "translateX(50%)", width: "100%", minWidth: "250px", maxWidth: "400px", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", overflow: "hidden", zIndex: 1000, boxShadow: "0 15px 40px rgba(0,0,0,0.8)", maxHeight: "400px", overflowY: "auto" }}>
                 {searchResults.length > 0 ? (
-                  searchResults.map((res, i) => (
-                    <div key={res.brand + i} onClick={() => { setSearchTerm(""); navigate(`/dashboard/brand/${encodeURIComponent(res.brand)}`); }} style={{ padding: "10px 15px", color: "white", borderBottom: "1px solid #334155", cursor: "pointer", display: "flex", flexDirection: "column", gap: "3px", transition: "background 0.2s" }} onMouseOver={(e) => (e.currentTarget.style.background = "rgba(59, 130, 246, 0.2)")} onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}>
-                      <span style={{ fontWeight: "bold", fontSize: "0.85rem", color: "#f1f5f9" }}>{res.brand}</span>
-                      <span style={{ fontSize: "0.65rem", color: "#94a3b8", background: "#0f172a", padding: "2px 6px", borderRadius: "4px", width: "fit-content" }}>{res.category}</span>
-                    </div>
-                  ))
+                  searchResults.map((res, i) => {
+                    // Pengecekan ketat untuk gambar (antisipasi string kosong dari DB)
+                    const hasImage = res.img && res.img.trim() !== "";
+                    const finalSrc = hasImage ? res.img : DefaultImg;
+
+                    return (
+                      <div
+                        key={res.brand + i}
+                        onClick={() => {
+                          setSearchTerm("");
+                          navigate(`/dashboard/brand/${encodeURIComponent(res.brand)}`);
+                        }}
+                        style={{
+                          padding: "10px 15px",
+                          color: "white",
+                          borderBottom: "1px solid #334155",
+                          cursor: "pointer",
+                          display: "flex",
+                          flexDirection: "row", // Mengubah ke row agar gambar di samping teks
+                          alignItems: "center",
+                          gap: "12px",
+                          transition: "background 0.2s"
+                        }}
+                        onMouseOver={(e) => (e.currentTarget.style.background = "rgba(59, 130, 246, 0.2)")}
+                        onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        {/* Tag Gambar dimasukkan di sini dengan ukuran proporsional */}
+                        <img
+                          src={finalSrc}
+                          alt={res.brand}
+                          style={{
+                            width: "35px",
+                            height: "35px",
+                            borderRadius: "6px",
+                            objectFit: "cover",
+                            backgroundColor: "#1e293b" // Background cadangan saat memuat
+                          }}
+                        />
+
+                        {/* Pembungkus Teks (Brand & Category) */}
+                        <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                          <span style={{ fontWeight: "bold", fontSize: "0.85rem", color: "#f1f5f9" }}>
+                            {res.brand}
+                          </span>
+                          <span style={{ fontSize: "0.65rem", color: "#94a3b8", background: "#0f172a", padding: "2px 6px", borderRadius: "4px", width: "fit-content" }}>
+                            {res.category}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
                 ) : (
                   <div style={{ padding: "15px", color: "#94a3b8", textAlign: "center", fontSize: "0.8rem" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "28px", display: "block", margin: "0 auto 8px", color: "#475569" }}>
