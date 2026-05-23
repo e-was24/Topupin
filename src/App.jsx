@@ -20,6 +20,7 @@ const BrandProduk = lazy(() => import("./pages/BrandProduk"));
 const Payment = lazy(() => import("./pages/Payment"));
 const CekId = lazy(() => import("./pages/CekId"));
 const HargaList = lazy(() => import("./pages/HargaList"));
+const About = lazy(() => import("./pages/About"));
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +92,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/cek-id" element={<CekId />} />
           <Route path="/produk" element={<HargaList />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </Suspense>
 
