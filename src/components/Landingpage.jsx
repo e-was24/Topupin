@@ -16,7 +16,7 @@ function LandingPage() {
         acc[bName] = {
           brand: bName,
           category: product.category || "General",
-          img: product.img || "https://via.placeholder.com/150",
+          img: product.img || DefaultImg,
           count: 0,
         };
       }
