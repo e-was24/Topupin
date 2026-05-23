@@ -5,6 +5,7 @@ import Card from "../components/Card";
 import ErrorRobot from "../components/ErrorRobot";
 import { fetchProducts } from "../api/productApi.js";
 import Ads from "../components/Ads";
+import DefaultImg from "../assets/default.png";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -308,7 +309,7 @@ function Dashboard() {
                     title={brandInfo.brand}
                     text={`${brandInfo.count} Pilihan`}
                     buttonText="Beli"
-                    img={brandInfo.img || "../assets/TOPUPIN.png"}
+                    img={brandInfo.img || DefaultImg}
                     link={`/dashboard/brand/${encodeURIComponent(brandInfo.brand)}`}
                     index={index}
                   />
@@ -320,6 +321,6 @@ function Dashboard() {
       </div>
     </div>
   );
-} 
+}
 
 export default Dashboard;

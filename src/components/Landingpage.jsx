@@ -2,6 +2,7 @@ import Button from "./Button";
 import Card from "./Card";
 import { useState, useEffect, useMemo } from "react";
 import { fetchProducts } from "../api/productApi.js";
+import DefaultImg from "../assets/default.png";
 
 function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -193,7 +194,7 @@ function LandingPage() {
                     title={brandInfo.brand}
                     text={`${brandInfo.count} Pilihan`}
                     buttonText="Terseedia"
-                    img={brandInfo.img || "https://picsum.photos/150"}
+                    img={brandInfo.img || DefaultImg}
                     index={index}
                   />
                 ))}
