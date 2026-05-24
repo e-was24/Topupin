@@ -50,38 +50,17 @@ app.post("/api/pembayaran", async (req, res) => {
   }
 
   try {
-    const payload = {
-      project: PAKASIR_PROJECT,
-      api_key: PAKASIR_API_KEY,
-      order_id: `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      amount: Number(amount),
-      redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
-    };
+    // Gunakan struktur Hosted Link Pakasir yang sudah terverifikasi (Status 200)
+    // Karena API /api/payment/${method} memberikan 404, kita langsung arahkan ke halaman pembayaran.
+    const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${`ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`}&redirect=${process.env.REDIRECT_URL || "https://website-kamu.com/selesai"}`;
 
-    // Integrasi HTTP Fetch ke Gateway Pakasir
-    const response = await fetch(`https://pakasir.com/api/payment/${method}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify(payload),
+    console.log("✅ Hosted Payment Link Generated:", checkout_url);
+
+    return res.json({
+      success: true,
+      checkout_url: checkout_url,
     });
 
-    const result = await response.json();
-
-    // Pastikan status API pihak ketiga sukses dan mengembalikan URL transaksi
-    if (response.ok && result && (result.payment_url || result.url)) {
-      return res.json({
-        success: true,
-        checkout_url: result.payment_url || result.url,
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: result.message || "Gagal mendapatkan URL pembayaran dari Pakasir",
-      });
-    }
   } catch (err) {
     // Penanganan apabila terjadi kegagalan jaringan/server pihak ketiga down
     return res.status(500).json({ 

@@ -2,15 +2,15 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "destination": "/api/index.js"
     },
     {
-      "source": "/webhook/(.*)",
+      "source": "/webhook/:path*",
       "destination": "/api/index.js"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api|webhook).*)" ,
       "destination": "/index.html"
     }
   ]

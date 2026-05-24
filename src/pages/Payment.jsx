@@ -23,16 +23,14 @@ function Payment() {
 
     const methodMapping = {
       "QRIS (All E-Wallet)": "qris",
-      Gopay: "gopay",
-      DANA: "dana",
+      "Gopay": "gopay",
+      "DANA": "dana",
       "OVO / LinkAja": "ovo",
       "BCA Virtual Account": "bca_va",
     };
 
     setLoading(true);
     try {
-      // PERBAIKAN: Gunakan path relatif "/api/pembayaran"
-      // agar otomatis memanggil domain Vercel yang sama
       const response = await fetch("/api/pembayaran", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,12 +43,18 @@ function Payment() {
         }),
       });
 
-      // Tambahkan pengecekan jika respon bukan JSON (misal kena 404 dari server)
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+      // Ambil respon dalam bentuk JSON terlebih dahulu
+      let result = {};
+      try {
+        result = await response.json();
+      } catch (parseErr) {
+        console.error("Gagal memparsing JSON:", parseErr);
       }
 
-      const result = await response.json();
+      if (!response.ok) {
+        // Jika backend mengirimkan pesan error kustom, tampilkan di alert
+        throw new Error(result.message || `Server error: ${response.status}`);
+      }
 
       if (result.success && result.checkout_url) {
         window.location.href = result.checkout_url;
@@ -59,7 +63,8 @@ function Payment() {
       }
     } catch (err) {
       console.error("Payment Error:", err);
-      alert("Gagal terhubung ke server. Pastikan API di Vercel sudah aktif!");
+      // Menampilkan pesan error asli yang ditangkap dari catch block
+      alert(`Gagal memproses transaksi: ${err.message}`);
     } finally {
       setLoading(false);
     }
