@@ -1,11 +1,25 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import { createRequire } from "module";
+import path from "path";
+import fs from "fs";
 
-// Solusi aman membaca JSON di lingkungan ES Modules Node.js
-const require = createRequire(import.meta.url);
-const products = require("./src/data/digiflazzProduct.json");
+// --- PERBAIKAN MEMBACA JSON AMAN DI VERCEL SERVERLESS ---
+const jsonPath = path.join(process.cwd(), "src", "data", "digiflazzProduct.json");
+let products = [];
+
+try {
+  if (fs.existsSync(jsonPath)) {
+    products = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+    console.log("✅ Data digiflazzProduct.json berhasil dimuat.");
+  } else {
+    console.warn("⚠️ File digiflazzProduct.json tidak ditemukan di path:", jsonPath);
+  }
+} catch (error) {
+  console.error("❌ Gagal memparsing file JSON:", error.message);
+  // Aplikasi tidak akan crash total, melainkan tetap berjalan dengan array kosong
+}
+// --------------------------------------------------------
 
 const app = express();
 
@@ -13,7 +27,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Konfigurasi Pakasir dari Environment Variables Vercel / .env lokal
+// Konfigurasi Pakasir dari Environment Variables Vercel
 const PAKASIR_PROJECT = process.env.PAKASIR_PROJECT_SLUG;
 const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 
@@ -32,7 +46,7 @@ app.post("/api/pembayaran", async (req, res) => {
   if (!PAKASIR_API_KEY || !PAKASIR_PROJECT) {
     return res.status(500).json({
       success: false,
-      message: "Konfigurasi server salah: PAKASIR_PROJECT atau PAKASIR_API_KEY tidak terbaca di Vercel.",
+      message: "Konfigurasi server salah: PAKASIR_PROJECT_SLUG atau PAKASIR_API_KEY tidak terbaca di Vercel.",
     });
   }
 
@@ -45,18 +59,17 @@ app.post("/api/pembayaran", async (req, res) => {
       redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
     };
 
-    console.log("Mengirim payload ke Pakasir:", payload); // Log untuk debugging di Vercel
+    console.log("Mengirim payload ke Pakasir:", payload);
 
     const response = await fetch(`https://pakasir.com/api/payment/${method}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json" // Tambahkan header ini
+        "Accept": "application/json"
       },
       body: JSON.stringify(payload),
     });
 
-    // Cek jika response status dari Pakasir bukan 2xx
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Error dari API Pakasir (Status ${response.status}):`, errorText);
@@ -81,7 +94,6 @@ app.post("/api/pembayaran", async (req, res) => {
       });
     }
   } catch (err) {
-    // Menangkap jika network error / website Pakasir down
     console.error("Error fatal pada Create Invoice:", err.message);
     return res.status(500).json({ 
       success: false, 
@@ -90,6 +102,7 @@ app.post("/api/pembayaran", async (req, res) => {
     });
   }
 });
+
 /**
  * Endpoint Webhook Callback Pakasir
  */
@@ -119,5 +132,5 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-// Ekspor default khusus kebutuhan deployment arsitektur Vercel Serverless
+// Ekspor default untuk Vercel Serverless
 export default app;
