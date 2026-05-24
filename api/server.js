@@ -21,49 +21,75 @@ const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 app.post("/api/pembayaran", async (req, res) => {
   const { amount, email, game_id, method } = req.body;
 
-  // Validasi input sederhana
-  if (!amount || !method || !PAKASIR_API_KEY) {
+  // 1. Validasi Input Lengkap
+  if (!amount || !method) {
     return res.status(400).json({
       success: false,
-      message: "Data tidak lengkap atau API Key belum disetting di Environment Variables",
+      message: "Data input (amount atau method) tidak lengkap.",
+    });
+  }
+
+  if (!PAKASIR_API_KEY || !PAKASIR_PROJECT) {
+    return res.status(500).json({
+      success: false,
+      message: "Konfigurasi server salah: PAKASIR_PROJECT atau PAKASIR_API_KEY tidak terbaca di Vercel.",
     });
   }
 
   try {
-    // Menggunakan native fetch (Node.js 18+)
+    const payload = {
+      project: PAKASIR_PROJECT,
+      api_key: PAKASIR_API_KEY,
+      order_id: `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      amount: Number(amount),
+      redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
+    };
+
+    console.log("Mengirim payload ke Pakasir:", payload); // Log untuk debugging di Vercel
+
     const response = await fetch(`https://pakasir.com/api/payment/${method}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json" // Tambahkan header ini
       },
-      body: JSON.stringify({
-        project: PAKASIR_PROJECT,
-        api_key: PAKASIR_API_KEY,
-        order_id: `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        amount: Number(amount), // Memastikan tipe data berupa angka murni
-        redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
-      }),
+      body: JSON.stringify(payload),
     });
+
+    // Cek jika response status dari Pakasir bukan 2xx
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Error dari API Pakasir (Status ${response.status}):`, errorText);
+      return res.status(response.status).json({
+        success: false,
+        message: `Pakasir merespon dengan status ${response.status}`,
+        detail: errorText
+      });
+    }
 
     const result = await response.json();
 
     if (result && (result.payment_url || result.url)) {
-      res.json({
+      return res.json({
         success: true,
         checkout_url: result.payment_url || result.url,
       });
     } else {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: result.message || "Gagal mendapatkan URL pembayaran dari Pakasir",
       });
     }
   } catch (err) {
-    console.error("Error Create Invoice:", err);
-    res.status(500).json({ success: false, message: "Terjadi kesalahan pada koneksi server" });
+    // Menangkap jika network error / website Pakasir down
+    console.error("Error fatal pada Create Invoice:", err.message);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Terjadi kesalahan koneksi internal server.",
+      error: err.message 
+    });
   }
 });
-
 /**
  * Endpoint Webhook Callback Pakasir
  */
