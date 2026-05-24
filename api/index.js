@@ -4,7 +4,13 @@ import "dotenv/config";
 import path from "path";
 import fs from "fs";
 
-// --- PERBAIKAN MEMBACA JSON AMAN DI VERCEL SERVERLESS ---
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Membaca JSON dengan metode aman Serverless Vercel (Menghindari Crash)
 const jsonPath = path.join(process.cwd(), "src", "data", "digiflazzProduct.json");
 let products = [];
 
@@ -16,16 +22,8 @@ try {
     console.warn("⚠️ File digiflazzProduct.json tidak ditemukan di path:", jsonPath);
   }
 } catch (error) {
-  console.error("❌ Gagal memparsing file JSON:", error.message);
-  // Aplikasi tidak akan crash total, melainkan tetap berjalan dengan array kosong
+  console.error("❌ Gagal membaca atau memparsing JSON:", error.message);
 }
-// --------------------------------------------------------
-
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // Konfigurasi Pakasir dari Environment Variables Vercel
 const PAKASIR_PROJECT = process.env.PAKASIR_PROJECT_SLUG;
@@ -35,7 +33,7 @@ const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 app.post("/api/pembayaran", async (req, res) => {
   const { amount, email, game_id, method } = req.body;
 
-  // 1. Validasi Input Lengkap
+  // 1. Validasi Input Body dari Frontend
   if (!amount || !method) {
     return res.status(400).json({
       success: false,
@@ -43,10 +41,11 @@ app.post("/api/pembayaran", async (req, res) => {
     });
   }
 
+  // 2. Proteksi Kebocoran / Ketiadaan Environment Variable di Vercel
   if (!PAKASIR_API_KEY || !PAKASIR_PROJECT) {
-    return res.status(500).json({
+    return res.status(422).json({
       success: false,
-      message: "Konfigurasi server salah: PAKASIR_PROJECT_SLUG atau PAKASIR_API_KEY tidak terbaca di Vercel.",
+      message: "Konfigurasi API Key atau Project Slug Pakasir belum diisi di Environment Variables Vercel.",
     });
   }
 
@@ -59,8 +58,7 @@ app.post("/api/pembayaran", async (req, res) => {
       redirect_url: process.env.REDIRECT_URL || "https://website-kamu.com/selesai",
     };
 
-    console.log("Mengirim payload ke Pakasir:", payload);
-
+    // Integrasi HTTP Fetch ke Gateway Pakasir
     const response = await fetch(`https://pakasir.com/api/payment/${method}`, {
       method: "POST",
       headers: {
@@ -70,19 +68,10 @@ app.post("/api/pembayaran", async (req, res) => {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Error dari API Pakasir (Status ${response.status}):`, errorText);
-      return res.status(response.status).json({
-        success: false,
-        message: `Pakasir merespon dengan status ${response.status}`,
-        detail: errorText
-      });
-    }
-
     const result = await response.json();
 
-    if (result && (result.payment_url || result.url)) {
+    // Pastikan status API pihak ketiga sukses dan mengembalikan URL transaksi
+    if (response.ok && result && (result.payment_url || result.url)) {
       return res.json({
         success: true,
         checkout_url: result.payment_url || result.url,
@@ -94,25 +83,25 @@ app.post("/api/pembayaran", async (req, res) => {
       });
     }
   } catch (err) {
-    console.error("Error fatal pada Create Invoice:", err.message);
+    // Penanganan apabila terjadi kegagalan jaringan/server pihak ketiga down
     return res.status(500).json({ 
       success: false, 
-      message: "Terjadi kesalahan koneksi internal server.",
+      message: "Gagal terhubung ke API Pakasir (Network Error)",
       error: err.message 
     });
   }
 });
 
 /**
- * Endpoint Webhook Callback Pakasir
+ * Endpoint Webhook Callback Pakasir (Dipanggil oleh server Pakasir secara berkala)
  */
 app.post("/webhook/pakkasir", async (req, res) => {
   const data = req.body;
-
+  
   if (data && data.status === "completed") {
     console.log(`✅ PEMBAYARAN LUNAS: ${data.order_id}`);
     try {
-      // Tempat peletakan logika integrasi API suplier otomatis (API Digiflazz Anda)
+      // Jalankan logika penjualan otomatis (API Digiflazz Anda) di sini
       return res.status(200).send("OK");
     } catch (error) {
       console.error("Gagal memproses pengiriman produk:", error);
@@ -124,13 +113,5 @@ app.post("/webhook/pakkasir", async (req, res) => {
   res.status(200).send("Notification Received");
 });
 
-// Jalankan server lokal jika di lingkungan development
-if (process.env.NODE_ENV !== "production") {
-  const PORT = 5000;
-  app.listen(PORT, () =>
-    console.log(`🚀 Lokal server backend aktif di: http://localhost:${PORT}`)
-  );
-}
-
-// Ekspor default untuk Vercel Serverless
+// Ekspor default agar dapat dibaca sebagai serverless function oleh handler Node.js Vercel
 export default app;
