@@ -90,10 +90,13 @@ app.post("/api/pembayaran", async (req, res) => {
     ]);
 
     if (dbError) {
-      console.error("❌ Gagal menyimpan transaksi ke Supabase:", dbError);
-      return res
-        .status(500)
-        .json({ success: false, message: "Gagal membuat order." });
+      console.error("❌ Detail Error Supabase:", dbError);
+      return res.status(500).json({
+        success: false,
+        message: `Database Menolak: ${dbError.message}`,
+        hint: dbError.hint,
+        details: dbError.details,
+      });
     }
 
     // Gunakan Status Page sebagai redirect URL
