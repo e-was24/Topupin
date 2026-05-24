@@ -21,6 +21,7 @@ const Payment = lazy(() => import("./pages/Payment"));
 const CekId = lazy(() => import("./pages/CekId"));
 const HargaList = lazy(() => import("./pages/HargaList"));
 const About = lazy(() => import("./pages/About"));
+const StatusTransaksi = lazy(() => import("./pages/StatusTransaksi"));
 
 // 2. BUAT KOMPONEN SCROLL TO TOP DI SINI
 function ScrollToTop() {
@@ -99,6 +100,7 @@ function App() {
           <Route path="/cek-id" element={<CekId />} />
           <Route path="/produk" element={<HargaList />} />
           <Route path="/about" element={<About />} />
+          <Route path="/status-transaksi/:order_id" element={<StatusTransaksi />} />
         </Routes>
       </Suspense>
 

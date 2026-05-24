@@ -40,6 +40,7 @@ function Payment() {
           email: userEmail,
           game_id: gameId,
           product_name: product.product_name,
+          product_sku: product.buyer_sku_code, // Tambahkan SKU Digiflazz
         }),
       });
 
