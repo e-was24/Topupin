@@ -104,8 +104,8 @@ app.post("/api/pembayaran", async (req, res) => {
       process.env.BASE_URL || "https://topupin-id-simple.vercel.app";
     const redirect_url = `${BASE_URL}/status-transaksi/${order_id}`;
 
-    // Gunakan struktur Hosted Link Pakasir yang sudah terverifikasi (Status 200)
-    const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${order_id}&redirect=${redirect_url}`;
+    // PERBAIKAN: Menyertakan parameter &method=${method} agar data terkirim utuh ke Pakasir
+    const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${order_id}&method=${method}&redirect=${redirect_url}`;
 
     console.log("✅ Hosted Payment Link Generated:", checkout_url);
 
