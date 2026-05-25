@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState("");
+  // Di-comment karena metode pembayaran akan dipilih langsung di halaman Pakasir
+  // const [paymentMethod, setPaymentMethod] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!location.state || !location.state.product) {
@@ -19,13 +20,15 @@ function Payment() {
   const { product, gameId, userEmail } = location.state;
 
   const handleCheckout = async () => {
-    if (!paymentMethod) return alert("Pilih metode pembayaran!");
+    // Di-comment karena validasi metode beralih ke sisi Pakasir
+    // if (!paymentMethod) return alert("Pilih metode pembayaran!");
 
-    // MAPPING METODE PEMBAYARAN SESUAI DOKUMENTASI DARI PAKASIR
+    // Di-comment karena mapping sudah tidak diperlukan di frontend
+    /*
     const methodMapping = {
       "Semua Metode": "all",
       "QRIS (All E-Wallet)": "qris",
-      Gopay: "qris", // Pakasir memproses E-Wallet via QRIS dinamis
+      Gopay: "qris", 
       DANA: "qris",
       "OVO / LinkAja": "qris",
       "BNI Virtual Account": "bni_va",
@@ -40,6 +43,7 @@ function Payment() {
         `Metode "${paymentMethod}" belum terkonfigurasi dengan benar.`,
       );
     }
+    */
 
     setLoading(true);
     try {
@@ -47,7 +51,7 @@ function Payment() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          method: selectedMethodCode,
+          // method: selectedMethodCode, // Tidak mengirimkan method agar Pakasir menampilkan semua opsi bawaannya
           amount: product.price,
           email: userEmail,
           game_id: gameId,
@@ -81,7 +85,8 @@ function Payment() {
     }
   };
 
-  // Daftar tombol pilihan metode pembayaran yang tampil di layar
+  // Di-comment karena daftar pilihan tombol tidak digunakan lagi
+  /*
   const methods = [
     "Semua Metode",
     "QRIS (All E-Wallet)",
@@ -89,6 +94,7 @@ function Payment() {
     "BRI Virtual Account",
     "BCA Virtual Account",
   ];
+  */
 
   return (
     <div
@@ -132,6 +138,10 @@ function Payment() {
           </p>
         </div>
 
+        {/* Bagian UI pemilihan metode pembayaran dinonaktifkan sementara.
+          Pengguna akan langsung memilih metode pembayaran di halaman eksternal Pakasir.
+        */}
+        {/*
         <div style={{ display: "grid", gap: "10px", marginBottom: "20px" }}>
           {methods.map((m) => (
             <button
@@ -152,6 +162,7 @@ function Payment() {
             </button>
           ))}
         </div>
+        */}
 
         <button
           onClick={handleCheckout}
@@ -167,7 +178,7 @@ function Payment() {
             cursor: loading ? "not-allowed" : "pointer",
           }}
         >
-          {loading ? "Memproses..." : "Bayar Sekarang"}
+          {loading ? "Memproses..." : "Lanjut ke Pembayaran"}
         </button>
       </div>
     </div>

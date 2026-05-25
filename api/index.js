@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Inisialisasi Supabase Admin
+// Inisialisasi Supabase Admin (Gunakan Service Role Key untuk bypass RLS jika perlu)
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
   process.env.VITE_SUPABASE_SERVICE_ROLE_KEY ||
@@ -48,13 +48,15 @@ const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
 const DIGIFLAZZ_USERNAME = process.env.VITE_DIGIFLAZZ_USERNAME;
 const DIGIFLAZZ_API_KEY = process.env.VITE_DIGIFLAZZ_API_KEY;
 
-// Endpoint Pembuatan Tagihan (Invoice)
+/**
+ * Endpoint Pembuatan Tagihan (Invoice) - Menggunakan Halaman Pilih Metode Pakasir
+ */
 app.post("/api/pembayaran", async (req, res) => {
-  const { amount, email, game_id, method, product_name, product_sku } =
-    req.body;
+  // Menerima data tanpa properti 'method'
+  const { amount, email, game_id, product_name, product_sku } = req.body;
 
   // 1. Validasi Input Body
-  if (!amount || !method || !game_id || !product_sku) {
+  if (!amount || !game_id || !product_sku) {
     return res.status(400).json({
       success: false,
       message:
@@ -74,7 +76,7 @@ app.post("/api/pembayaran", async (req, res) => {
   try {
     const order_id = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    // 3. Simpan rincian transaksi ke Supabase
+    // 3. Simpan rincian transaksi ke Supabase dengan nilai default untuk payment_method
     const { error: dbError } = await supabase.from("transactions").insert([
       {
         order_id,
@@ -83,7 +85,7 @@ app.post("/api/pembayaran", async (req, res) => {
         product_name: product_name,
         amount: Number(amount),
         target_id: game_id,
-        payment_method: method,
+        payment_method: "hosted_pakasir", // Ditandai 'hosted_pakasir' karena konsumen memilih di halaman Pakasir
         status: "pending",
       },
     ]);
@@ -103,8 +105,8 @@ app.post("/api/pembayaran", async (req, res) => {
       `${BASE_URL}/status-transaksi/${order_id}`,
     );
 
-    // Sinkronisasi penuh dengan penambahan parameter &method sesuai regulasi Pakasir Docs
-    const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${order_id}&method=${method}&redirect=${redirect_url}`;
+    // FORMAT BERSIH TANPA PARAMETER METODE: Memaksa Pakasir menampilkan semua opsi pembayarannya sendiri
+    const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${order_id}&redirect=${redirect_url}`;
 
     console.log("✅ Hosted Payment Link Generated:", checkout_url);
 
@@ -143,7 +145,7 @@ app.post("/webhook/pakkasir", async (req, res) => {
         return res.status(404).send("Transaction not found");
       }
 
-      // Idempotency check
+      // Idempotency check (mencegah proses ganda untuk order yang sama)
       if (trx.status === "completed") {
         return res.status(200).send("Already processed");
       }
@@ -177,7 +179,7 @@ app.post("/webhook/pakkasir", async (req, res) => {
       const digiResult = await digiResponse.json();
       console.log("📦 Respon Digiflazz:", JSON.stringify(digiResult));
 
-      // 4. Update Status Akhir di Supabase
+      // 4. Update Status Akhir di Supabase berdasarkan respons Digiflazz
       const newStatus =
         digiResult.data &&
         (digiResult.data.status === "Success" ||
