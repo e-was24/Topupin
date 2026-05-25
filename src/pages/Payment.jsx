@@ -21,13 +21,25 @@ function Payment() {
   const handleCheckout = async () => {
     if (!paymentMethod) return alert("Pilih metode pembayaran!");
 
+    // MAPPING METODE PEMBAYARAN SESUAI DOKUMENTASI DARI PAKASIR
     const methodMapping = {
+      "Semua Metode": "all",
       "QRIS (All E-Wallet)": "qris",
-      "Gopay": "gopay",
-      "DANA": "dana",
-      "OVO / LinkAja": "ovo",
+      Gopay: "qris", // Pakasir memproses E-Wallet via QRIS dinamis
+      DANA: "qris",
+      "OVO / LinkAja": "qris",
+      "BNI Virtual Account": "bni_va",
+      "BRI Virtual Account": "bri_va",
       "BCA Virtual Account": "bca_va",
     };
+
+    const selectedMethodCode = methodMapping[paymentMethod];
+
+    if (!selectedMethodCode) {
+      return alert(
+        `Metode "${paymentMethod}" belum terkonfigurasi dengan benar.`,
+      );
+    }
 
     setLoading(true);
     try {
@@ -35,16 +47,15 @@ function Payment() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          method: methodMapping[paymentMethod],
+          method: selectedMethodCode,
           amount: product.price,
           email: userEmail,
           game_id: gameId,
           product_name: product.product_name,
-          product_sku: product.buyer_sku_code, // Tambahkan SKU Digiflazz
+          product_sku: product.buyer_sku_code || product.sku,
         }),
       });
 
-      // Ambil respon dalam bentuk JSON terlebih dahulu
       let result = {};
       try {
         result = await response.json();
@@ -53,28 +64,29 @@ function Payment() {
       }
 
       if (!response.ok) {
-        // Jika backend mengirimkan pesan error kustom, tampilkan di alert
         throw new Error(result.message || `Server error: ${response.status}`);
       }
 
       if (result.success && result.checkout_url) {
+        // Alihkan pengguna ke Hosted Payment Link Pakasir
         window.location.href = result.checkout_url;
       } else {
         alert("Gagal: " + (result.message || "Terjadi kesalahan server"));
       }
     } catch (err) {
       console.error("Payment Error:", err);
-      // Menampilkan pesan error asli yang ditangkap dari catch block
       alert(`Gagal memproses transaksi: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
+
+  // Daftar tombol pilihan metode pembayaran yang tampil di layar
   const methods = [
+    "Semua Metode",
     "QRIS (All E-Wallet)",
-    "Gopay",
-    "DANA",
-    "OVO / LinkAja",
+    "BNI Virtual Account",
+    "BRI Virtual Account",
     "BCA Virtual Account",
   ];
 

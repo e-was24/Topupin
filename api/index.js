@@ -4,7 +4,7 @@ import "dotenv/config";
 import path from "path";
 import fs from "fs";
 import { createClient } from "@supabase/supabase-js";
-import crypto from "crypto"; // Gunakan module native untuk MD5
+import crypto from "crypto";
 
 const app = express();
 
@@ -12,14 +12,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Inisialisasi Supabase Admin (Gunakan Service Role Key untuk bypass RLS jika perlu)
+// Inisialisasi Supabase Admin
 const supabase = createClient(
   process.env.VITE_SUPABASE_URL,
   process.env.VITE_SUPABASE_SERVICE_ROLE_KEY ||
     process.env.VITE_SUPABASE_ANON_KEY,
 );
 
-// Membaca JSON dengan metode aman Serverless Vercel (Menghindari Crash)
+// Membaca file JSON produk secara aman (Serverless safe)
 const jsonPath = path.join(
   process.cwd(),
   "src",
@@ -42,11 +42,9 @@ try {
   console.error("❌ Gagal membaca atau memparsing JSON:", error.message);
 }
 
-// Konfigurasi Pakasir dari Environment Variables Vercel
+// Konfigurasi Variabel Environment Vercel
 const PAKASIR_PROJECT = process.env.PAKASIR_PROJECT_SLUG;
 const PAKASIR_API_KEY = process.env.PAKASIR_API_KEY;
-
-// Konfigurasi Digiflazz
 const DIGIFLAZZ_USERNAME = process.env.VITE_DIGIFLAZZ_USERNAME;
 const DIGIFLAZZ_API_KEY = process.env.VITE_DIGIFLAZZ_API_KEY;
 
@@ -55,15 +53,16 @@ app.post("/api/pembayaran", async (req, res) => {
   const { amount, email, game_id, method, product_name, product_sku } =
     req.body;
 
-  // 1. Validasi Input Body dari Frontend
+  // 1. Validasi Input Body
   if (!amount || !method || !game_id || !product_sku) {
     return res.status(400).json({
       success: false,
-      message: "Data input tidak lengkap.",
+      message:
+        "Data input tidak lengkap. Pastikan SKU produk terkirim dari frontend.",
     });
   }
 
-  // 2. Proteksi Kebocoran / Ketiadaan Environment Variable di Vercel
+  // 2. Validasi Kesiapan API Key Backend
   if (!PAKASIR_API_KEY || !PAKASIR_PROJECT) {
     return res.status(422).json({
       success: false,
@@ -75,7 +74,7 @@ app.post("/api/pembayaran", async (req, res) => {
   try {
     const order_id = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    // Simpan rincian transaksi ke Supabase
+    // 3. Simpan rincian transaksi ke Supabase
     const { error: dbError } = await supabase.from("transactions").insert([
       {
         order_id,
@@ -93,18 +92,18 @@ app.post("/api/pembayaran", async (req, res) => {
       console.error("❌ Detail Error Supabase:", dbError);
       return res.status(500).json({
         success: false,
-        message: `Database Menolak: ${dbError.message}`,
-        hint: dbError.hint,
-        details: dbError.details,
+        message: `Database Menolak: ${dbError.message}. Periksa kembali kecocokan kolom tabel Supabase Anda.`,
       });
     }
 
-    // Gunakan Status Page sebagai redirect URL
+    // 4. Bangun URL Redirect Status & URL Pembayaran Pakasir
     const BASE_URL =
       process.env.BASE_URL || "https://topupin-id-simple.vercel.app";
-    const redirect_url = `${BASE_URL}/status-transaksi/${order_id}`;
+    const redirect_url = encodeURIComponent(
+      `${BASE_URL}/status-transaksi/${order_id}`,
+    );
 
-    // PERBAIKAN: Menyertakan parameter &method=${method} agar data terkirim utuh ke Pakasir
+    // Sinkronisasi penuh dengan penambahan parameter &method sesuai regulasi Pakasir Docs
     const checkout_url = `https://app.pakasir.com/pay/${PAKASIR_PROJECT}/${Number(amount)}/?order_id=${order_id}&method=${method}&redirect=${redirect_url}`;
 
     console.log("✅ Hosted Payment Link Generated:", checkout_url);
@@ -114,7 +113,6 @@ app.post("/api/pembayaran", async (req, res) => {
       checkout_url: checkout_url,
     });
   } catch (err) {
-    // Penanganan apabila terjadi kegagalan jaringan/server pihak ketiga down
     return res.status(500).json({
       success: false,
       message: "Gagal terhubung ke API Pakasir (Network Error)",
@@ -124,12 +122,11 @@ app.post("/api/pembayaran", async (req, res) => {
 });
 
 /**
- * Endpoint Webhook Callback Pakasir (Dipanggil oleh server Pakasir secara berkala)
+ * Endpoint Webhook Callback Pakasir (Automated Fulfillment Digiflazz)
  */
 app.post("/webhook/pakkasir", async (req, res) => {
   const data = req.body;
 
-  // Pakasir biasanya mengirim payload: { order_id, amount, status, signature }
   if (data && data.status === "completed") {
     console.log(`✅ PEMBAYARAN LUNAS DITERIMA: ${data.order_id}`);
 
@@ -146,21 +143,22 @@ app.post("/webhook/pakkasir", async (req, res) => {
         return res.status(404).send("Transaction not found");
       }
 
-      // Pastikan status belum diproses (idempotency)
+      // Idempotency check
       if (trx.status === "completed") {
         return res.status(200).send("Already processed");
       }
 
-      // 2. Jalankan Top-up Otomatis via Digiflazz
       console.log(
         `🚀 Memproses Top-up Digiflazz untuk SKU: ${trx.product_sku}`,
       );
 
+      // 2. Buat MD5 Signature untuk API Digiflazz
       const digiflazzSignature = crypto
         .createHash("md5")
         .update(`${DIGIFLAZZ_USERNAME}${DIGIFLAZZ_API_KEY}${trx.order_id}`)
         .digest("hex");
 
+      // 3. Tembak API Digiflazz
       const digiResponse = await fetch(
         "https://api.digiflazz.com/v1/transaction",
         {
@@ -179,7 +177,7 @@ app.post("/webhook/pakkasir", async (req, res) => {
       const digiResult = await digiResponse.json();
       console.log("📦 Respon Digiflazz:", JSON.stringify(digiResult));
 
-      // 3. Update Status di Supabase
+      // 4. Update Status Akhir di Supabase
       const newStatus =
         digiResult.data &&
         (digiResult.data.status === "Success" ||
@@ -209,5 +207,4 @@ app.post("/webhook/pakkasir", async (req, res) => {
   res.status(200).send("Notification Received");
 });
 
-// Ekspor default agar dapat dibaca sebagai serverless function oleh handler Node.js Vercel
 export default app;
