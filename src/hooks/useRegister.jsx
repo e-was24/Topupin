@@ -23,9 +23,12 @@ export const useRegister = (initialValues) => {
   const validate = () => {
     let tempErrors = {};
     if (!formData.username.trim()) tempErrors.username = "Username wajib diisi";
-    if (!formData.full_name.trim()) tempErrors.full_name = "Nama lengkap wajib diisi";
-    if (!formData.email || !formData.email.includes("@")) tempErrors.email = "Email tidak valid";
-    if (formData.password.length < 6) tempErrors.password = "Password minimal 6 karakter";
+    if (!formData.full_name.trim())
+      tempErrors.full_name = "Nama lengkap wajib diisi";
+    if (!formData.email || !formData.email.includes("@"))
+      tempErrors.email = "Email tidak valid";
+    if (formData.password.length < 6)
+      tempErrors.password = "Password minimal 6 karakter";
     if (!formData.phone_number || formData.phone_number.length < 10) {
       tempErrors.phone_number = "Nomor telepon tidak valid";
     }
@@ -34,12 +37,12 @@ export const useRegister = (initialValues) => {
     return Object.keys(tempErrors).length === 0;
   };
 
-const sendData = async () => {
+  const sendData = async () => {
     if (!validate())
       return { success: false, msg: "Tolong perbaiki kesalahan input." };
 
     setIsSubmitting(true);
-    
+
     // --- TAMBAHAN LOG DEBUG ---
     console.group("DEBUG: Proses Registrasi");
     console.log("Data Form:", formData);
@@ -48,7 +51,7 @@ const sendData = async () => {
     // --------------------------
 
     try {
-      // 1. Daftarkan ke Supabase Auth
+      // 1. Daftarkan ke Supabase Auth (Password otomatis di-hash aman di sini oleh Supabase)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -66,29 +69,37 @@ const sendData = async () => {
       // 2. Simpan profil ke tabel public.users
       if (authData?.user) {
         const userData = {
-            id: authData.user.id,
-            username: formData.username,
-            email: formData.email,
-            full_name: formData.full_name,
-            phone_number: formData.phone_number,
-            password: formData.password,
-            role: "user",
-            balance: 0,
-            status: "active",
+          id: authData.user.id,
+          username: formData.username,
+          email: formData.email,
+          full_name: formData.full_name,
+          phone_number: formData.phone_number,
+          // Kolom password mentah DIHAPUS karena autentikasi dikunci via Supabase Auth
+          role: "user",
+          balance: 0,
+          status: "active",
         };
 
-        console.log("DEBUG: Data yang akan di-insert ke tabel users:", userData);
+        console.log(
+          "DEBUG: Data yang akan di-insert ke tabel users:",
+          userData,
+        );
 
-        const { error: dbError } = await supabase.from("users").insert([userData]);
+        const { error: dbError } = await supabase
+          .from("users")
+          .insert([userData]);
 
         if (dbError) {
-            console.error("DEBUG: Error saat insert ke tabel users:", dbError);
-            throw dbError;
+          console.error("DEBUG: Error saat insert ke tabel users:", dbError);
+          throw dbError;
         }
 
         // 3. TRIGGER OTP
         const payload = { phone: formData.phone_number, method: "whatsapp" };
-        console.log("DEBUG: Mengirim payload ke Edge Function (send-otp-v1):", payload);
+        console.log(
+          "DEBUG: Mengirim payload ke Edge Function (send-otp-v1):",
+          payload,
+        );
 
         await supabase.functions.invoke("send-otp-v1", {
           body: payload,
@@ -98,7 +109,7 @@ const sendData = async () => {
       return {
         success: true,
         email: formData.email,
-        phone_number: formData.phone_number, 
+        phone_number: formData.phone_number,
         msg: "Registrasi berhasil!",
       };
     } catch (err) {
