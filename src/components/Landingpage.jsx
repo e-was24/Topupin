@@ -151,7 +151,7 @@ function LandingPage() {
         </div>
       </div>
 
-      <div className="LandingPage-listProduk">
+      {/* <div className="LandingPage-listProduk">
         {sortedCategories.map((category) => {
           const brands = groupedByCategory[category];
           const firstChar = category[0].toUpperCase();
@@ -202,7 +202,7 @@ function LandingPage() {
             </div>
           );
         })}
-      </div>
+      </div> */}
     </>
   );
 }
