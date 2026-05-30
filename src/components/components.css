@@ -1,36 +1,80 @@
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/* ==========================================================================
+   1. VARIABLES & CORE STYLING
+   ========================================================================== */
+:root {
+    --bg-dark: #0e1015;
+    --card-bg: #171923;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-color: #2d3142;
+    --theme-color: #3b82f6;
+    --theme-glow: rgba(59, 130, 246, 0.15);
+}
+
+/* Base Font Responsif global */
+html {
+    font-size: 14px; /* Default dasar untuk mobile */
+}
+
+@media (min-width: 768px) {
+    html { font-size: 16px; } /* Naik ke ukuran standar di tablet/desktop */
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. UTILITIES & ANIMATIONS
+   ========================================================================== */
 .menu-spinner {
     width: 24px;
     height: 24px;
     border: 3px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     border-top-color: #3b82f6;
-    /* Warna indikator loading biru */
     animation: spinNavbarMenu 0.7s linear infinite;
 }
 
 @keyframes spinNavbarMenu {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
-/* button */
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+    0%, 100% { transform: translateY(0px); opacity: 1; }
+    50% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ==========================================================================
+   3. BUTTONS STYLES (Default Mobile)
+   ========================================================================== */
 .btn {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     border: none;
     border-radius: 10px;
-    width: fit-content;
-    font-size: 13px;
-    padding: 10px 20px;
-    font-weight: 300;
+    width: 100%; /* Tombol penuh di mobile demi kenyamanan jempol */
+    font-size: 0.85rem;
+    padding: 12px 20px;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
 .btn-logout {
@@ -38,12 +82,8 @@
     color: white;
 }
 
-.btn-logout:hover {
-    background: #862828;
-    color: white;
-}
+.btn-logout:hover { background: #862828; }
 
-/* Button Style ala GSAP */
 .btn-buy {
     background-color: transparent;
     border: 2px solid var(--theme-color);
@@ -56,45 +96,32 @@
     transition: all 0.2s ease;
 }
 
-.btn-buy:hover {
+.btn-buy:hover:not(:disabled) {
     background-color: var(--theme-color);
     color: var(--bg-dark);
     box-shadow: 0 0 15px var(--theme-color);
 }
 
-.btn-buy:disabled {
-    background: radial-gradient(circle, #82868d, #252525);
+.btn-buy:disabled, .btn-addToCart:disabled, .btn-search:disabled {
+    background: radial-gradient(circle, #82868d, #252525) !important;
     cursor: not-allowed;
-    box-shadow: none;
-    color: #ffffff;
+    box-shadow: none !important;
+    color: #ffffff !important;
     opacity: .7;
-    filter: brightness(50%)
+    filter: brightness(50%);
 }
 
 .btn-addToCart {
     background: radial-gradient(circle, #2e8a5c, #0a2f0f);
     color: white;
-    cursor: pointer;
-    transition: ease-in-out 0.3s;
 }
 
-.btn-addToCart:hover {
+.btn-addToCart:hover:not(:disabled) {
     background: radial-gradient(circle, #27c583, #0a2f0f);
 }
 
-.btn-addToCart:disabled {
-    background: radial-gradient(circle, #82868d, #252525);
-    cursor: not-allowed;
-    box-shadow: none;
-    color: #ffffff;
-    opacity: .7;
-    filter: brightness(50%)
-}
-
-/* --- LOGIN (Indigo/Royal Blue) --- */
 .btn-login {
     background: #4F46E5;
-    /* Indigo yang modern */
     color: white;
     box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3);
 }
@@ -105,47 +132,21 @@
     box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
 }
 
-/* --- REGISTER (Modern Outline / Ghost Button) --- */
-/* Register biasanya aksi sekunder, jadi buat lebih kalem tapi tetap elegan */
 .btn-register {
     background: transparent;
     color: #38BDF8;
-    /* Warna Cyan Sky */
     border: 2px solid #38BDF8;
-    box-shadow: none;
 }
 
 .btn-register:hover:not(:disabled) {
     background: rgba(56, 189, 248, 0.1);
-    /* Background transparan biru tipis */
     color: #7DD3FC;
     border-color: #7DD3FC;
     transform: translateY(-2px);
 }
 
-/* --- SEARCH (Tetap Emerald tapi dibedain dikit gradasinya) --- */
 .btn-search {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-    color: white;
-    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
-}
-
-
-.btn-search:hover {
-    background: #0b4612;
-}
-
-.btn-search:disabled {
-    background: radial-gradient(circle, #82868d, #252525);
-    cursor: not-allowed;
-    box-shadow: none;
-    color: #ffffff;
-    opacity: .7;
-    filter: brightness(50%)
-}
-
-.btn-search {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
@@ -154,114 +155,61 @@
     color: white;
     border: none;
     border-radius: 8px;
-    /* Sudut agak kotak tapi lembut */
     font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.btn-search:hover {
+.btn-search:hover:not(:disabled) {
     background: linear-gradient(135deg, #248f32 0%, #1d7529 100%);
     box-shadow: 0 10px 15px -3px rgba(29, 117, 41, 0.3);
     transform: translateY(-2px);
 }
 
-.btn-search:active {
-    transform: translateY(0);
-}
-
-/* cs */
-
+/* Customer Service Button (Mobile Default: Bulat) */
 .btn-cs {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 20px;
+    right: 20px;
     z-index: 1000;
-
-    /* Styling Button */
-    padding: 12px 20px;
+    padding: 15px;
     background: linear-gradient(135deg, #38BDF8 0%, #2563EB 100%);
     color: white;
     border: none;
-    border-radius: 50px;
-    /* Bikin bentuk lonjong/kapsul */
-    font-weight: 600;
+    border-radius: 50%; /* Default bulat di HP */
     cursor: pointer;
-
-    /* Shadow & Glow */
     box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
-    transition: all 0.3s ease;
-
-    /* Animasi Mengambang Pelan */
     animation: floating 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+    width: fit-content;
 }
 
-.btn-cs:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
-    background: linear-gradient(135deg, #7DD3FC 0%, #2563EB 100%);
-}
-
-/* Keyframes buat efek gerak naik turun sedikit */
-@keyframes floating {
-    0% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-10px);
-    }
-
-    100% {
-        transform: translateY(0px);
-    }
+.btn-cs span:not(.material-symbols-outlined) {
+    display: none; /* Sembunyikan teks di HP */
 }
 
 .btn-cs .material-symbols-outlined {
     font-size: 24px;
-    /* Efek pendaran pada icon */
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
 
-
-@media (max-width: 600px) {
-    .btn-cs {
-        padding: 15px;
-        /* Sama sisi */
-        border-radius: 50%;
-        /* Bulat */
-        bottom: 20px;
-        right: 20px;
-    }
-
-    .btn-cs span:not(.material-symbols-outlined) {
-        display: none;
-        /* Sembunyiin teks "Customer Service", sisa icon aja */
-    }
-}
-
-/* button end */
-
-/* Navigation Bar */
+/* ==========================================================================
+   4. NAVIGATION BAR (Mobile Default)
+   ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px;
-    /* Padding lebih lebar biar lega */
+    padding: 15px 20px;
     background-color: rgba(15, 23, 42, 0.8);
-    /* Warna asli dengan transparansi */
     backdrop-filter: blur(10px);
-    /* Efek blur kaca */
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    /* Garis tipis biar elegan */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -270,320 +218,210 @@
 .nav-container {
     display: flex;
     align-items: center;
-}
-
-.nav-logo {
-    margin-right: 20px;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .nav-logo img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
-.nav-menu {
-    display: flex;
+.hamburger {
+    display: block;
+    cursor: pointer;
+    color: white;
+    font-size: 1.5rem;
+    z-index: 2000;
 }
 
+.nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    box-sizing: border-box;
+}
+
+.nav-menu.active { left: 0; }
+
 .nav-menu-list {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
     display: flex;
     list-style: none;
+    align-items: center;
 }
 
 .nav-menu-item {
-    margin-right: 20px;
+    margin: 15px 0;
 }
 
 .nav-menu-item a {
     text-decoration: none;
     color: white;
-    font-weight: 300;
-    font-family: 'Poppins', sans-serif;
-    font-size: .9em;
+    font-weight: 400;
+    font-size: 1.3rem;
 }
 
 .nav-button {
-    display: flex;
+    position: fixed;
+    left: -120%;
+    bottom: 0;
+    flex-direction: column;
+    background: rgba(15, 23, 42, 0.98);
+    width: 100%;
+    padding: 20px 20px 60px 20px;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
     gap: 10px;
+    box-sizing: border-box;
 }
+
+.nav-button.active { left: 0; }
 
 .input-search {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 10px;
     border: none;
-    font-size: 13px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
+    font-size: 0.9rem;
     font-family: 'Poppins', sans-serif;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.hamburger {
-    display: none;
-    cursor: pointer;
-    color: white;
-}
-
-@media (max-width: 900px) {
-    .hamburger {
-        display: block;
-        margin-left: auto;
-        position: relative;
-        z-index: 2000;
-    }
-
-    .nav-container {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .nav-menu {
-        position: fixed;
-        left: -100%;
-        top: 0px;
-        flex-direction: column;
-        background: rgba(15, 23, 42, 0.98);
-        backdrop-filter: blur(20px);
-        width: 100%;
-        height: 100vh;
-        text-align: center;
-        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
-        padding-top: 40px;
-    }
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .nav-menu-list {
-        flex-direction: column;
-        padding: 0;
-        margin: 0;
-        align-items: center;
-    }
-
-    .nav-menu-item {
-        margin: 20px 0;
-        font-size: 1.2rem;
-    }
-
-    .nav-button {
-        position: fixed;
-        left: -120%;
-        bottom: 0;
-        flex-direction: column;
-        background: rgba(15, 23, 42, 0.98);
-        width: 100%;
-        padding: 30px 20px 100px 20px;
-        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1000;
-        align-items: stretch;
-    }
-
-    .nav-button.active {
-        left: 0;
-    }
-
-    .nav-button .input-search {
-        width: 100% !important;
-    }
-
-    .navbar-searchbar {
-        position: absolute !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 50% !important;
-        margin: 0 !important;
-    }
-}
-
-@media (max-width: 500px) {
-    body {
-        font-size: 50%;
-    }
-
-    .navbar-searchbar {
-        width: 45% !important;
-    }
-
-    .nav-menu {
-        justify-content: center;
-    }
-
-    .nav-button {
-        height: fit-content;
-    }
-}
-
-/* Navigation Bar end */
-
-
-/* landingpage */
-
+/* ==========================================================================
+   5. LANDING PAGE & HERO SECTION (Mobile Default)
+   ========================================================================== */
 .hero {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 85vh;
     background-color: #141124;
-    /* Efek cahaya di pojok kiri atas dan kanan bawah */
     background-image:
         radial-gradient(at 0% 0%, rgb(94, 63, 23) 0, transparent 50%),
         radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
         radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
     position: relative;
     overflow: hidden;
+    padding: 40px 20px;
+    box-sizing: border-box;
 }
 
-/* Tambahkan ini untuk efek butiran halus (noise) agar lebih estetik */
 .hero::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.05;
+    inset: 0;
+    opacity: 0.03;
     pointer-events: none;
     background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
-}
-
-.hero-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hero-title {
-    color: white;
-    width: 14em;
-    padding: 10px;
-    font-size: 2em;
-    font-weight: 700;
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.2;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    text-align: center;
 }
 
 .hero-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.hero-title {
+    color: white;
+    font-size: clamp(1.6rem, 5vw, 2.8rem); /* Ukuran dinamis otomatis */
+    font-weight: 700;
+    line-height: 1.3;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    margin: 0 0 15px 0;
+    max-width: 100%;
 }
 
 .hero-description {
-    font-size: .9em;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
     font-weight: 300;
-    width: 30em;
-    text-align: center;
-    color: white;
-    font-family: 'Poppins', sans-serif;
+    max-width: 500px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    margin: 0 0 25px 0;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    flex-direction: column; /* Tombol menumpuk ke bawah di HP */
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
 }
 
-/* product section landing page */
-
+/* Products Section Landing Page */
 .products-section {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     background: #141124;
-    height: 50dvh;
-    padding: 5.5rem 20px;
+    padding: 60px 20px;
 }
 
 .products-section .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr; /* 1 Kolom di HP */
     gap: 20px;
-    padding: 40px 20px;
+    padding-top: 30px;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 .products-grid .product-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     text-align: center;
-
-    /* background */
     background: #171923;
     border: 1px solid #2d3142;
     background-image:
         radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.05) 0, transparent 50%),
         radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.05) 0, transparent 50%);
-    border-radius: 10px;
-    padding: 20px 20px;
+    border-radius: 12px;
+    padding: 25px 20px;
+    box-sizing: border-box;
 }
 
 .products-grid .product-card:nth-child(2) {
     animation: fadeInUp 3s ease-in-out infinite;
     background: #1c213b;
     border: 1px solid #2c3663;
-    background-image:
-        radial-gradient(circle at 10% 10%, rgba(36, 67, 94, 0.05) 0, transparent 50%),
-        radial-gradient(circle at 90% 90%, rgba(36, 67, 94, 0.05) 0, transparent 50%);
 }
 
 .products-grid .product-card .status {
-    display: block;
+    display: inline-block;
     margin-top: 10px;
-    padding: 4px 8px;
-    background-color: #0c64474d;
-    color: white;
-    font-size: 0.75em;
+    padding: 4px 12px;
+    background-color: rgba(12, 100, 71, 0.3);
+    color: #0ae448;
+    font-size: 0.75rem;
     border-radius: 30px;
     border: 1px solid #13662b;
     text-transform: uppercase;
-    color: #0ae448;
-    box-shadow: 0 0 10px #0c6b2760;
-    letter-spacing: 2px;
-}
-
-@keyframes fadeInUp {
-    0% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translateY(-5px);
-        opacity: 1;
-
-    }
-
-    100% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
-
-}
-
-.LandingPage-listProduk {
-    background: #141124;
-    padding: 20px;
+    box-shadow: 0 0 10px rgba(12, 107, 39, 0.3);
+    letter-spacing: 1.5px;
 }
 
 .aboutUs {
-    height: 100dvh;
+    height: 60vh;
     background-image: url("../assets/about.png");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll; /* Scroll di mobile agar ringan */
 }
 
 .aboutUs .menu-cover {
@@ -592,30 +430,146 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 40px;
+    padding: 20px;
     text-align: center;
     height: 100%;
-    width: 100dvw;
+    width: 100%;
     backdrop-filter: blur(5px);
+    box-sizing: border-box;
 }
 
-/* product end */
+/* ==========================================================================
+   6. MAIN CARDS CATALOG GRID (Mobile Default: Square & Compact)
+   ========================================================================== */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Kolom langsung di HP biar hemat ruang */
+    gap: 12px;
+    padding: 20px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
 
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    width: 100%; /* Mengikuti grid, tidak dikunci 300px */
+    color: var(--text-main);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
 
-/* landingpage end */
+.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--theme-color);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 12px var(--theme-glow);
+}
 
-/* popup */
+.card-title {
+    font-size: 0.95rem; /* Lebih kecil di HP */
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-text {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Dikunci 2 baris saja di HP agar hemat tinggi */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-img img {
+    width: 100%;
+    height: 90px; /* Ukuran pas kotak di HP */
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Sembunyikan footer/tombol detail bawaan di HP agar rapi & estetik */
+.card .card-footer {
+    display: none;
+}
+
+/* Nth-Child Theme Automation */
+.card:nth-child(3n+1) { --theme-color: #0ae448; --theme-glow: rgba(10, 228, 72, 0.15); }
+.card:nth-child(3n+1) .card-title { background: linear-gradient(45deg, #fff, #0ae448); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.card:nth-child(3n+2) { --theme-color: #00df89; --theme-glow: rgba(0, 223, 137, 0.15); }
+.card:nth-child(3n+2) .card-title { background: linear-gradient(45deg, #fff, #00df89); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.card:nth-child(3n+3) { --theme-color: #ab47bc; --theme-glow: rgba(171, 71, 188, 0.15); }
+.card:nth-child(3n+3) .card-title { background: linear-gradient(45deg, #fff, #ab47bc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* ==========================================================================
+   7. ADS SECTION (Mobile Default)
+   ========================================================================== */
+.ads-cover {
+    display: flex;
+    flex-direction: column;
+    min-height: 30vh;
+    width: 100%; 
+    margin-top: 30px;
+    background-image: url("../assets/Ads-default.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+}
+
+.ads-cover .cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(to bottom, #0f172a, rgba(0,0,0,0.4), #0f172a);
+    backdrop-filter: blur(2px) brightness(60%);
+    -webkit-backdrop-filter: blur(2px) brightness(60%);
+    flex-grow: 1;
+    padding: 30px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ads-cover .cover .ads-text {
+    color: #a3a3a3;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   8. POPUP / OVERLAY (Mobile Default)
+   ========================================================================== */
 .overlayStyle {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .contentStyle {
@@ -624,8 +578,9 @@
     padding: 20px;
     border-radius: 10px;
     position: relative;
-    min-width: 300px;
-    max-width: 90%;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
 }
 
 .closeBtnStyle {
@@ -635,268 +590,110 @@
     background: transparent;
     border: none;
     color: #fff;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
 }
 
 
-
-/* popup end */
-
-
-/* card */
 /* ==========================================================================
-   1. VARIABLE & CORE STYLING (Tema Gelap Premium ala GSAP)
-   ========================================================================== */
-:root {
-    --bg-dark: #0e1015;
-    /* Warna background utama website */
-    --card-bg: #171923;
-    /* Warna background kotak card */
-    --text-main: #f3f4f6;
-    /* Warna teks putih terang */
-    --text-muted: #9ca3af;
-    /* Warna teks abu-abu halus */
-    --border-color: #2d3142;
-    /* Warna border default saat diam */
-}
-
-/* ==========================================================================
-   2. LAYOUT GRID RESPONSIF (Cocok untuk banyak produk digital)
-   ========================================================================== */
-.card-container {
-    display: grid;
-    /* Otomatis membagi kolom: minimal lebar card 220px, maksimal mengisi sisa ruang */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    /* Jarak antar card */
-    padding: 40px 20px;
-    width: 100%;
-    max-width: 1400px;
-    /* Batas lebar maksimal halaman agar tidak terlalu melar */
-    margin: 0 auto;
-    /* Membuat posisi grid tepat di tengah layar */
-    box-sizing: border-box;
-}
-
-/* ==========================================================================
-   3. BASE CARD STYLING (Kompak & Hemat Ruang)
-   ========================================================================== */
-.card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 16px;
-
-    /* PENTING: Membuat internal layout card menjadi flex vertikal */
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    /* PENTING: Memaksa tinggi card mengikuti baris tertinggi di grid-nya */
-    height: 100%;
-    width: 300px;
-    box-sizing: border-box;
-
-    color: var(--text-main);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-/* Memperbaiki orientasi kotak (Square) Card di Layar HP */
-@media (max-width: 600px) {
-    .card {
-        width: 100%;
-        padding: 10px;
-        gap: 8px;
-        border-radius: 10px;
-    }
-
-    /* Sembunyikan tombol detail di HP agar kartu tetap berbentuk kotak */
-    .card .card-footer {
-        display: none !important;
-    }
-
-    /* Kecilkan judul dan gambar khusus HP */
-    .card-title {
-        font-size: 0.9rem !important;
-    }
-
-    .card-img img {
-        height: 80px !important;
-    }
-}
-
-/* Efek Hover Card (Mengangkat & Memancarkan Cahaya Neon) */
-.card:hover {
-    transform: translateY(-5px);
-    border-color: var(--theme-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
-        0 0 15px var(--theme-glow);
-}
-
-/* Konten di dalam Card */
-.card-title {
-    font-size: 1.2rem;
-    /* Ukuran pas untuk nama produk digital */
-    font-weight: 700;
-    margin: 0;
-    color: var(--text-main);
-    /* Potong judul menjadi '...' jika terlalu panjang agar card tetap rapi */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-text {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    line-height: 1.5;
-    margin: 0;
-
-    /* PENTING: Memberikan ruang tumbuh agar mendesak footer ke paling bawah */
-    flex-grow: 1;
-
-    /* Mengunci teks maksimal 3 baris agar tinggi area teks seimbang */
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.card-img img {
-    width: 100%;
-    height: 130px;
-    /* Tinggi proporsional untuk katalog massal */
-    border-radius: 8px;
-    object-fit: cover;
-    /* Gambar otomatis terpotong rapi di tengah tanpa penyet */
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.card-footer {
-    /* Memastikan tombol selalu konsisten di dasar card */
-    margin-top: auto;
-    width: 100%;
-}
-
-/* ==========================================================================
-   4. OTOMATISASI WARNA TEMA (Selang-seling Menggunakan CSS :nth-child)
+   9. MEDIA QUERIES (BREAKPOINTS MAJU KE DESKTOP)
    ========================================================================== */
 
-/* Card ke-1, 4, 7, dst: HIJAU GSAP (GreenSock Signature) */
-.card:nth-child(3n+1) {
-    --theme-color: #0ae448;
-    --theme-glow: rgba(10, 228, 72, 0.15);
-}
-
-.card:nth-child(3n+1) .card-title {
-    background: linear-gradient(45deg, #fff, #0ae448);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Card ke-2, 5, 8, dst: CYAN TECH */
-.card:nth-child(3n+2) {
-    --theme-color: #00df89;
-    --theme-glow: rgba(0, 223, 137, 0.15);
-}
-
-.card:nth-child(3n+2) .card-title {
-    background: linear-gradient(45deg, #fff, #00df89);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Card ke-3, 6, 9, dst: PURPLE ELECTRIC */
-.card:nth-child(3n+3) {
-    --theme-color: #ab47bc;
-    --theme-glow: rgba(171, 71, 188, 0.15);
-}
-
-.card:nth-child(3n+3) .card-title {
-    background: linear-gradient(45deg, #fff, #ab47bc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* ads */
-
-.ads-cover {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 40dvh;
-    width: 100%; /* Menggunakan 100% mencegah horizontal scroll dibanding 100dvw */
-    margin-top: 10dvh;
-    background-image: url("../assets/Ads-default.png");
-    background-position: center;
-    background-size: cover; /* Diubah ke cover agar gambar memenuhi area desktop */
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Efek parallax untuk desktop */
-}
-
-.ads-cover .cover {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* Perbaikan sintaks gradasi (ditambahkan 'to bottom') */
-    background: linear-gradient(to bottom, #0f172a, #0000005b, #0f172a);
-    backdrop-filter: blur(2px) brightness(50%);
-    -webkit-backdrop-filter: blur(2px) brightness(50%); /* Untuk dukungan safari */
-    height: 100%; /* Mengikuti tinggi parent-nya (.ads-cover) */
-    width: 100%;
-    padding: 0 40px;
-}
-
-.ads-cover .cover .ads-text {
-    color: #858585;
-    font-size: 1rem;
-    font-weight: 400;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    max-width: 800px; /* Menggunakan max-width agar teks fleksibel dan tidak meluber */
-    width: 100%;
-    line-height: 1.6;
-}
-
-/* --- Media Queries (Responsif) --- */
-
-/* Tablet & Mobile (Layar di bawah 900px) */
-@media (max-width: 900px) {
-    .ads-cover {
-        background-attachment: scroll; /* Mematikan fixed karena berat/buggy di mobile */
-        height: 40dvh; /* Membiarkan tinggi menyesuaikan konten jika teksnya panjang */
-        min-height: 35dvh;
-        padding: 40px 0; /* Memberi ruang atas bawah saat mode auto-height */
-    }
-
-    .ads-cover .cover {
-        height: 100%;
-        min-height: 35dvh;
-        padding: 0 20px;
-    }
-
-    .ads-cover .cover .ads-text {
-        width: 90%;
-        font-size: 0.9rem;
-    }
-}
-
-/* Khusus HP Kecil (Layar di bawah 480px) */
-@media (max-width: 480px) {
-    .ads-cover {
-        margin-top: 5dvh; /* Mengurangi margin atas di HP agar tidak terlalu lowong */
+/* --- LAYAR TABLET & PC LEBAR RENDAH (Minimal 768px) --- */
+@media (min-width: 768px) {
+    .btn {
+        width: fit-content; /* Mengembalikan ke lebar teks */
+        font-size: 13px;
     }
     
-    .ads-cover .cover .ads-text {
-        width: 100%;
-        font-size: 0.85rem; /* Ukuran font sedikit lebih kecil agar pas di HP */
+    .hero-buttons {
+        flex-direction: row; /* Berjejer ke samping */
+        width: auto;
     }
+
+    .products-section .products-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 Kolom di tablet */
+    }
+
+    .card-container {
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* Grid Auto */
+        gap: 20px;
+        padding: 40px 20px;
+    }
+
+    .card {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .card-title { font-size: 1.15rem; }
+    .card-text { -webkit-line-clamp: 3; font-size: 0.85rem; }
+    .card-img img { height: 120px; }
+    .card .card-footer { display: block; } /* Tampilkan tombol detail */
+
+    .ads-cover .cover .ads-text { font-size: 0.95rem; }
 }
 
-/* ads end */
+/* --- LAYAR DESKTOP UTAMA (Minimal 992px) --- */
+@media (min-width: 992px) {
+    .hamburger { display: none; } /* Hilangkan menu burger */
+
+    .nav-menu {
+        position: static;
+        height: auto;
+        width: auto;
+        background: transparent;
+        backdrop-filter: none;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .nav-menu-list {
+        flex-direction: row;
+    }
+
+    .nav-menu-item {
+        margin: 0 25px 0 0;
+    }
+
+    .nav-menu-item a {
+        font-size: 0.9rem;
+        font-weight: 300;
+    }
+
+    .nav-button {
+        position: static;
+        width: auto;
+        background: transparent;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .input-search {
+        width: auto;
+    }
+
+    /* Customer Service balik jadi bentuk Kapsul Elegan */
+    .btn-cs {
+        padding: 12px 24px;
+        border-radius: 50px;
+        bottom: 30px;
+        right: 30px;
+        gap: 10px;
+    }
+
+    .btn-cs span:not(.material-symbols-outlined) {
+        display: inline; /* Munculkan tulisan kembali */
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .hero { min-height: 100vh; }
+    .aboutUs { background-attachment: fixed; height: 100vh; }
+    .products-section .products-grid { grid-template-columns: repeat(3, 1fr); }
+    .card-img img { height: 140px; }
+    .ads-cover { background-attachment: fixed; min-height: 40vh; }
+    .ads-cover .cover .ads-text { font-size: 1rem; }
+}
